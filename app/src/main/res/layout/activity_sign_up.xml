@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:background="#96c778"
+    android:gravity="center">
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:inputType="textPersonName"
+        android:hint="FirstName"
+        android:ems="20"
+        android:id="@+id/editTextFirstName"
+        android:layout_marginTop="0dp"
+        android:background="@color/colorGray"
+        android:textSize="13pt"
+        android:textColor="#808080"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:editable="false" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:inputType="textPersonName"
+        android:hint="LastName"
+        android:ems="20"
+        android:id="@+id/editTextLastName"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorGray"
+        android:textSize="13pt"
+        android:textColor="#808080"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:editable="false" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:inputType="textEmailAddress"
+        android:ems="35"
+        android:textSize="13pt"
+        android:layout_marginTop="20dp"
+        android:id="@+id/editTextEmail"
+        android:background="@color/colorGray"
+        android:textColor="#808080"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:hint="Email"
+        android:editable="false" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:inputType="textPassword"
+        android:ems="64"
+        android:textSize="13pt"
+        android:layout_marginTop="20dp"
+        android:textColor="#808080"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/editTextPassword"
+        android:hint="Password"
+        android:background="@color/colorGray"
+        android:editable="false" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:text="REGISTER"
+        android:id="@+id/buttonRegister"
+        android:background="#4d7832"
+        android:textColor="#f3f3f3"
+        android:textSize="13pt"
+        android:layout_below="@+id/editTextPassword"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="25dp"
+        android:layout_alignRight="@+id/editTextPassword"
+        android:layout_alignEnd="@+id/editTextPassword"
+        android:onClick="onRegisterButtonClick" />
+
+</LinearLayout>
