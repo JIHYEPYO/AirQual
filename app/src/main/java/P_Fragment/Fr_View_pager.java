@@ -30,7 +30,7 @@ public class Fr_View_pager extends Fragment {
         //v_viewpager=(VerticalViewPager)findViewById(R.id.pager);
         v_viewpager=(VerticalViewPager)view.findViewById(R.id.pager);
         //p_adapter=new Pager_Adapter(getLayoutInflater(),getApplicationContext(),pHandler);
-        //v_viewpager.setAdapter(p_adapter);
+        //v_viewpager.setAdapter(p_adapter);   
         v_viewpager.setCurrentItem(0);
         v_viewpager.setOffscreenPageLimit(5);
         v_viewpager.setAdapter(MainActivity.pa);
