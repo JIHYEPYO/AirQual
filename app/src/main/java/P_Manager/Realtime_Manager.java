@@ -26,7 +26,6 @@ public class Realtime_Manager {
         local=(TextView)realtime_view.findViewById(R.id.NO2_data);
         local.setText("NA");
 
-
         local=(TextView)realtime_view.findViewById(R.id.O3_data);
         local.setText("NA");
 

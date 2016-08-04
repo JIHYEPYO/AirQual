@@ -3,7 +3,6 @@ package com.example.pyojihye.airpollution;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,21 +16,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.CircleOptions;
 
 import P_Adapter.Pager_Adapter;
 import P_Data.Air_Data;
-import P_Fragment.Fr_GMap;
+import P_Fragment.Fr_R_G_Map;
 import P_Fragment.Fr_View_pager;
-import P_Manager.Gmap_Manager;
+import P_Manager.GMap_Manager;
+import P_Manager.Gps_Manager;
 import P_Service.Air_Fake_Service;
+import P_Utils.Util_STATUS;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     GoogleMap gmap;
 
     //class
-    public Gmap_Manager gmap_manager;
+    public Gps_Manager gps_manager;
+    public GMap_Manager gmap_manager;
     //Fragment 관련
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -65,7 +66,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
     }
-
+    public void init() {
+        gps_manager = new Gps_Manager(getApplicationContext());
+        air_fake_service=new Air_Fake_Service(sHandler);
+        Util_STATUS util=new Util_STATUS(); //util
+        gmap_manager=new GMap_Manager();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -84,11 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public void init() {
-        gmap_manager = new Gmap_Manager(getApplicationContext());
-        air_fake_service=new Air_Fake_Service(sHandler);
 
-    }
     private final Handler sHandler=new Handler(){
 
         @Override
@@ -96,39 +98,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
             Air_Data ar=(Air_Data)msg.getData().getSerializable("data");
-            if(0<ar.co&&ar.co<100)
-            {
-                Fr_GMap.gMap.addCircle(new CircleOptions().center(ar.latLng).radius(10000).strokeColor(Color.GREEN).fillColor(Color.GREEN));
-
-            }
-            else if(101<ar.co&&ar.co<200)
-            {
-                Fr_GMap.gMap.addCircle(new CircleOptions().center(ar.latLng).radius(10000).strokeColor(Color.BLUE).fillColor(Color.BLUE));
-            }
-            else if(201<ar.co&&ar.co<300)
-            {
-                Fr_GMap.gMap.addCircle(new CircleOptions().center(ar.latLng).radius(10000).strokeColor(Color.YELLOW).fillColor(Color.YELLOW));
-            }
-            else if(301<ar.co&&ar.co<400)
-            {
-                Fr_GMap.gMap.addCircle(new CircleOptions().center(ar.latLng).radius(10000).strokeColor(Color.CYAN).fillColor(Color.CYAN));
-            }
-            else
-            {
-                Fr_GMap.gMap.addCircle(new CircleOptions().center(ar.latLng).radius(10000).strokeColor(Color.BLACK).fillColor(Color.BLACK));
-            }
+            gmap_manager.Set_Circle(ar);
 
 
-            //Fr_GMap.gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ar.latLng,15));
-            //fragmentTransaction.notify();
-            //Fr_GMap.gMap
 
-            //googleMap.addCircle(new CircleOptions().center(latLng).radius(100).strokeColor(Color.RED).fillColor(Color.RED
-            //Fr_GMap. gMap.addCircle(new CircleOptions().center(ar.latLng).radius(1000000));
-            //String vv=String.valueOf(ar.co)+","+String.valueOf(ar.co2)+","+String.valueOf(ar.no2)+","
-             //       +String.valueOf(ar.o3)+","+String.valueOf(ar.so2);
-            //Air_Data ar=(Air_Data)msg.getData().getSerializable("data");
-            //Intent serverIntent = new Intent(this, DeviceListActivity.class);
 
 
         }
@@ -139,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        //클릭시마다 상태확인
         if (id == R.id.nav_main) {
 
         } else if (id == R.id.nav_realtime_data) {
@@ -156,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_realtime_map) {
            // MapFragment map=(MapFragment)getFragmentManager().findFragmentById(R.id.map);
-            Fragment fr = new Fr_GMap(gmap_manager.get_LatLng());
+            Fragment fr = new Fr_R_G_Map(gps_manager.get_LatLng());
 
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();

@@ -68,8 +68,8 @@ public class Air_Fake_Service extends Service {
     private Air_Data Get_Air_Data() //지금은 랜덤변수로 할당 나중에 JSON파싱과정을 이곳에다가가
     {
         return new Air_Data((int)(Math.random()*500),(int)(Math.random()*500),
-                (int)(Math.random()*500),(int)(Math.random()*500),(int)(Math.random()*500),
-                (int)(Math.random()*500),(int)(Math.random()*500),new LatLng(32+Math.random(),-117+Math.random()));
+            (int)(Math.random()*500),(int)(Math.random()*500),(int)(Math.random()*500),
+            (int)(Math.random()*500),(int)(Math.random()*500),new LatLng(32+Math.random(),-117+Math.random()));
         //32,-117
     }
    @Override
