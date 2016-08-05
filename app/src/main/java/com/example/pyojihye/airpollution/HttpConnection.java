@@ -1,8 +1,9 @@
 package com.example.pyojihye.airpollution;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -30,7 +31,7 @@ public  class HttpConnection extends AsyncTask<String, String, String> {
     HttpURLConnection conn;
     URL url = null;
 
-    public HttpConnection(Context connectContext,String... str) {
+    public HttpConnection(Context connectContext) {
         this.connectContext=connectContext;
     }
 
@@ -45,7 +46,7 @@ public  class HttpConnection extends AsyncTask<String, String, String> {
         } catch (MalformedURLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return "MalformedURLException";
+            return "exception";
         }
 
         try {
@@ -76,7 +77,7 @@ public  class HttpConnection extends AsyncTask<String, String, String> {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                return "JSON Exception";
+                return "exception";
             }
 
             String body = json.toString();
@@ -92,11 +93,9 @@ public  class HttpConnection extends AsyncTask<String, String, String> {
         } catch (IOException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
-            Log.d("where",e1.getMessage());
-            return "IOException";
+            return "exception";
         } catch(Exception e){
-            Log.w("Unexpected", e.getMessage());
-            return "Exception";
+            return "exception";
         }
 
         try {
@@ -120,9 +119,8 @@ public  class HttpConnection extends AsyncTask<String, String, String> {
         } catch (IOException e) {
             e.printStackTrace();
             return "exception";
-        }        catch(Exception e){
-            Log.w("Unexpected", e.getMessage());
-            return null;
+        }catch(Exception e){
+            return "exception";
         }finally {
             conn.disconnect();
         }
@@ -136,15 +134,19 @@ public  class HttpConnection extends AsyncTask<String, String, String> {
             //Toast.makeText(connectContext, jsonObject.getString("pwd"), Toast.LENGTH_SHORT).show();
             Toast.makeText(connectContext, result, Toast.LENGTH_SHORT).show();
 
+            Intent IntentSettingDevice = new Intent(connectContext, SettingDeviceActivity.class);
+            ((Activity)connectContext).startActivity(IntentSettingDevice);
+
         }catch (JSONException e){
             e.printStackTrace();
-
         }
 
-//        if (result.equalsIgnoreCase("true")) {
+//        if (result.equalsIgnoreCase("success")) {
 //            Toast.makeText(connectContext,"Success!", Toast.LENGTH_SHORT).show();
+//            Intent IntentSettingDevice = new Intent(connectContext, SettingDeviceActivity.class);
+//            ((Activity)connectContext).startActivity(IntentSettingDevice);
 //
-//        } else if (result.equalsIgnoreCase("false")) {
+//        } else if (result.equalsIgnoreCase("fail")) {
 //            Toast.makeText(connectContext,"Failed!", Toast.LENGTH_SHORT).show();
 //
 //        } else if (result.equalsIgnoreCase("exception")) {

@@ -36,8 +36,8 @@ public class SignUpActivity extends AppCompatActivity {
                 return;
             }else{
                 if(password.equals(confirmPassword)){
-                    HttpConnection httpConnectionSignUp = new HttpConnection(getApplicationContext());
-                    httpConnectionSignUp.execute(email,password,confirmPassword,firstName,lastName);
+//                    HttpConnection httpConnectionSignUp = new HttpConnection(getApplicationContext());
+//                    httpConnectionSignUp.execute(email,password,confirmPassword,firstName,lastName);
 
                     Intent signInIntent = new Intent(getApplicationContext(), SignInActivity.class);
                     startActivity(signInIntent);
