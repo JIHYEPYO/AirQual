@@ -45,8 +45,8 @@ public class SignInActivity extends AppCompatActivity {
                 } else {
                     HttpConnection httpConnection = new HttpConnection(getApplicationContext());
                     httpConnection.execute(email,password);
-                    //blueToothOn();
-                    //gpsOn();
+                    blueToothOn();
+                    gpsOn();
                 }
             }
         });

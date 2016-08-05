@@ -69,11 +69,11 @@ public  class HttpConnection extends AsyncTask<String, String, String> {
                 json.put("email", str[0]);
                 json.put("pwd", str[1]);
 
-//                if(str.length>2){
-//                    json.put("checkpwd", str[2]);
-//                    json.put("fname", str[3]);
-//                    json.put("lname", str[4]);
-//                }
+                if(str.length>2){
+                    json.put("checkpwd", str[2]);
+                    json.put("fname", str[3]);
+                    json.put("lname", str[4]);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
                 return "JSON Exception";
