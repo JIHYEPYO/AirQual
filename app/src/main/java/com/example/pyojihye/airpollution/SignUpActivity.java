@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -17,29 +16,36 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+    }
+    public void onButtonRegisterClick(View v)  {
+        EditText editTextFirstName = (EditText) findViewById(R.id.editTextFirstName);
+        EditText editTextLastName = (EditText) findViewById(R.id.editTextLastName);
+        EditText editTextEmail = (EditText) findViewById(R.id.editTextEmail);
+        EditText editTextPassword = (EditText) findViewById(R.id.editTextPassword);
+        EditText editTextConfirmPassword = (EditText) findViewById(R.id.editTextConfirmPassword);
 
-        Button buttonRegister = (Button) findViewById(R.id.buttonRegister);
-        buttonRegister.setOnClickListener(new View.OnClickListener() {
-            EditText editTextFirstName = (EditText) findViewById(R.id.editTextFirstName);
-            EditText editTextLastName = (EditText) findViewById(R.id.editTextLastName);
-            EditText editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-            EditText editTextPassword = (EditText) findViewById(R.id.editTextPassword);
+        if (v.isClickable()) {
+            String email = editTextEmail.getText().toString();
+            String password = editTextPassword.getText().toString();
+            String confirmPassword = editTextConfirmPassword.getText().toString();
+            String firstName = editTextFirstName.getText().toString();
+            String lastName = editTextLastName.getText().toString();
 
-            @Override
-            public void onClick(View view) {
-                String firstName = editTextFirstName.getText().toString();
-                String lastName = editTextLastName.getText().toString();
-                String email = editTextEmail.getText().toString();
-                String password = editTextPassword.getText().toString();
+            if(firstName.equals("") || lastName.equals("") || email.equals("") || password.equals("")) {
+                Toast.makeText(getApplicationContext(), "Please fill in all information", Toast.LENGTH_LONG).show();
+                return;
+            }else{
+                if(password.equals(confirmPassword)){
+                    HttpConnection httpConnectionSignUp = new HttpConnection(getApplicationContext());
+                    httpConnectionSignUp.execute(email,password,confirmPassword,firstName,lastName);
 
-                if(firstName.equals("") || lastName.equals("") || email.equals("") || password.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Please fill in all information", Toast.LENGTH_LONG).show();
-                    return;
-                }else{
                     Intent signInIntent = new Intent(getApplicationContext(), SignInActivity.class);
                     startActivity(signInIntent);
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), "This is not the same password and its confirmation.", Toast.LENGTH_LONG).show();
                 }
             }
-        });
+        }
     }
 }

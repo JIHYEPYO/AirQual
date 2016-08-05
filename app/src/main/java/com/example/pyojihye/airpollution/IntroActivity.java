@@ -22,10 +22,10 @@ public class IntroActivity extends Activity {
 
     Runnable irun=new Runnable(){
         public void run(){
-            Intent i=new Intent(IntroActivity.this,SignInActivity.class);
-            startActivity(i);
-            finish();
-            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+        Intent i=new Intent(IntroActivity.this,SignInActivity.class);
+        startActivity(i);
+        finish();
+        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
         }
     };
     @Override

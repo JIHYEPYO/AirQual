@@ -6,7 +6,6 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -50,14 +49,7 @@ public class Pager_Adapter extends PagerAdapter {
             case 0: {
                 view=inflater.inflate(R.layout.air_status,null);
                 container.addView(view);
-                final Button mButton = (Button) view.findViewById(R.id.status_btn);
-                mButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
-
-                    }
-                });
                 break;
             }
             case 1:

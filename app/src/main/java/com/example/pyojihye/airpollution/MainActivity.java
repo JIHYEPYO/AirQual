@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 
 import P_Adapter.Pager_Adapter;
 import P_Data.Air_Data;
+import P_Fragment.Fr_DeviceManagement;
 import P_Fragment.Fr_GMap;
 import P_Fragment.Fr_View_pager;
 import P_Manager.Gmap_Manager;
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public void init() {
-        gmap_manager = new Gmap_Manager(getApplicationContext());
+        //gmap_manager = new Gmap_Manager(getApplicationContext());
         air_fake_service=new Air_Fake_Service(sHandler);
 
     }
@@ -170,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             //fragmentManager.findFragmentById(R.id.map);
         } else if (id == R.id.nav_management) {
-
+            Fragment fragmentDeviceManagement = new Fr_DeviceManagement();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

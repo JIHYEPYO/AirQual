@@ -2,36 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/colorAccent"
 
     >
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:id="@+id/all_layout"
-        >
+        android:id="@+id/all_layout">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100sp"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:background="#d9d9d9"
-            android:layout_marginBottom="1.5dp"
-            >
+            android:background="@color/colorGrayDark"
+            android:layout_marginBottom="1.5dp">
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_gravity="center"
-                >
+                android:layout_gravity="center">
+
                 <ImageView
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-
+                    android:background="@drawable/heart0"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="25dp"
-                    />
+                    android:layout_marginLeft="25dp"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="70dp"
@@ -39,28 +39,24 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="75dp"
                     android:textSize="60dp"
-                    android:textColor="#000000"
-                    android:id="@+id/heart_text"
-                    />
+                    android:textColor="@color/colorBlack"
+                    android:id="@+id/heart_text"/>
 
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_weight="2"
-
-            android:layout_marginBottom="2dp"
-            >
+            android:layout_marginBottom="2dp">
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:layout_margin="1.5dp"
-                android:background="#f2f2f2"
+                android:background="@color/colorGray"
                 android:layout_marginRight="1.5dp"
                 >
                 <TextView
@@ -70,16 +66,16 @@
                     android:text="CO"
                     android:textSize="25dp"
                     android:layout_marginLeft="5dp"
-                    android:textColor="#000000"
-                    android:textStyle="bold" />
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|right"
                     android:text="123"
                     android:textSize="70dp"
-
-                    android:textColor="#000000"
+                    android:textColor="@color/colorBlack"
                     android:id="@+id/CO_data"
                     android:textStyle="bold"
                     android:layout_marginRight="5dp" />
@@ -93,7 +89,7 @@
                 android:orientation="horizontal"
                 android:layout_margin="1.5dp"
                 android:layout_marginLeft="1.5dp"
-                android:background="#f2f2f2"
+                android:background="@color/colorGray"
                 >
                 <TextView
                     android:layout_width="wrap_content"
@@ -101,7 +97,7 @@
                     android:gravity="left|top"
                     android:text="SO2"
                     android:textSize="25dp"
-                    android:textColor="#000000"
+                    android:textColor="@color/colorBlack"
                     android:layout_marginLeft="5dp"
                     android:textStyle="bold" />
                 <TextView
@@ -111,50 +107,51 @@
                     android:text="123"
                     android:textSize="70dp"
 
-                    android:textColor="#000000"
+                    android:textColor="@color/colorBlack"
                     android:id="@+id/SO2_data"
                     android:textStyle="bold"
-                    android:layout_marginRight="5dp" />
+                    android:layout_marginRight="5dp"/>
 
             </FrameLayout>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_weight="2"
-
-            android:layout_marginBottom="2dp"
-            >
+            android:layout_marginBottom="2dp">
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:layout_margin="1.5dp"
-                android:background="#f2f2f2"
+                android:background="@color/colorGray"
                 android:layout_marginRight="1.5dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="left|top"
                     android:text="NO2"
                     android:textSize="25dp"
-                    android:textColor="#000000"
+                    android:textColor="@color/colorBlack"
                     android:layout_marginLeft="5dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|right"
                     android:text="123"
                     android:textSize="70dp"
-
-                    android:textColor="#000000"
+                    android:textColor="@color/colorBlack"
                     android:id="@+id/NO2_data"
                     android:textStyle="bold"
                     android:layout_marginRight="5dp" />
 
             </FrameLayout>
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -162,45 +159,43 @@
                 android:orientation="horizontal"
                 android:layout_margin="1.5dp"
                 android:layout_marginLeft="1.5dp"
-                android:background="#f2f2f2"
-                >
+                android:background="@color/colorGray">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="left|top"
                     android:text="O3"
                     android:textSize="25dp"
-                    android:textColor="#000000"
+                    android:textColor="@color/colorBlack"
                     android:layout_marginLeft="5dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|right"
                     android:text="123"
                     android:textSize="70dp"
-
-                    android:textColor="#000000"
+                    android:textColor="@color/colorBlack"
                     android:id="@+id/O3_data"
                     android:textStyle="bold"
                     android:layout_marginRight="5dp" />
 
             </FrameLayout>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_weight="2"
-
-            android:layout_marginBottom="2dp"
-            >
+            android:layout_marginBottom="2dp">
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:layout_margin="1.5dp"
-                android:background="#f2f2f2"
+                android:background="@color/colorGray"
                 android:layout_marginRight="1.5dp">
                 <TextView
                     android:layout_width="wrap_content"
@@ -208,20 +203,20 @@
                     android:gravity="left|top"
                     android:text="TEMP"
                     android:textSize="25dp"
-                    android:textColor="#000000"
+                    android:textColor="@color/colorBlack"
                     android:layout_marginLeft="5dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|right"
                     android:text="123"
                     android:textSize="70dp"
-
-                    android:textColor="#000000"
+                    android:textColor="@color/colorBlack"
                     android:id="@+id/temp_data"
                     android:textStyle="bold"
-                    android:layout_marginRight="5dp" />
+                    android:layout_marginRight="5dp"/>
 
             </FrameLayout>
 
@@ -232,17 +227,17 @@
                 android:orientation="horizontal"
                 android:layout_margin="1.5dp"
                 android:layout_marginLeft="1.5dp"
-                android:background="#f2f2f2"
-                >
+                android:background="@color/colorGray">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="left|top"
                     android:text="PM"
                     android:textSize="25dp"
-                    android:textColor="#000000"
+                    android:textColor="@color/colorBlack"
                     android:layout_marginLeft="5dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -250,13 +245,12 @@
                     android:text="123"
                     android:textSize="70dp"
 
-                    android:textColor="#000000"
+                    android:textColor="@color/colorBlack"
                     android:id="@+id/PM_data"
                     android:textStyle="bold"
                     android:layout_marginRight="5dp" />
 
             </FrameLayout>
         </LinearLayout>
-
     </LinearLayout>
 </LinearLayout>

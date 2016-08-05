@@ -6,9 +6,8 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="8"
+        android:id="@+id/status_img"/>
 
-        android:id="@+id/status_img"
-        />
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="30dp"
@@ -16,16 +15,5 @@
         android:text="not data"
         android:textSize="30dp"
         android:gravity="center"
-        android:layout_weight="1"
-        />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_weight="1"
-        android:id="@+id/status_btn"
-        android:textColor="#FFFFFF"
-        android:textSize="30dp"
-        android:text="START"
-        android:background="#808080"
-        />
+        android:layout_weight="1"/>
 </LinearLayout>
