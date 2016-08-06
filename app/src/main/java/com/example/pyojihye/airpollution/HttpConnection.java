@@ -23,15 +23,16 @@ import java.net.URL;
 /**
  * Created by PYOJIHYE on 2016-08-04.
  */
-public  class HttpConnection extends AsyncTask<String, String, String> {
-
+public class HttpConnection extends AsyncTask<String, String, String> {
     Context connectContext;
+    Activity activity;
     public static final int CONNECTION_TIMEOUT=10000;
     public static final int READ_TIMEOUT=15000;
     HttpURLConnection conn;
     URL url = null;
 
-    public HttpConnection(Context connectContext) {
+    public HttpConnection(Activity activity, Context connectContext) {
+        this.activity=activity;
         this.connectContext=connectContext;
     }
 
@@ -39,9 +40,11 @@ public  class HttpConnection extends AsyncTask<String, String, String> {
     protected String doInBackground(String... str) {
         try{
             // Enter URL address where your php file resides
-            url = new URL("http://teama-iot.calit2.net/slim/recieveData.php/rcvJSON");
-            //url = new URL("http://teamb-iot.calit2.net/week3b/bluebase/receive/recieveData.php/rcvJSON");
-            //url = new URL("http://teamc-iot.calit2.net/IOT/public/Login");
+            if(str.length<=2){ //signIn
+                url = new URL("http://teama-iot.calit2.net/slim/recieveData.php/rcvJSON2");
+            }else{  //signUp
+                url = new URL("http://teama-iot.calit2.net/slim/recieveData.php//sign-up");
+            }
 
         } catch (MalformedURLException e) {
             // TODO Auto-generated catch block
@@ -67,6 +70,7 @@ public  class HttpConnection extends AsyncTask<String, String, String> {
             JSONObject json = new JSONObject();
 
             try{
+                json.put("type","app");
                 json.put("email", str[0]);
                 json.put("pwd", str[1]);
 
@@ -129,22 +133,48 @@ public  class HttpConnection extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
 
-        try{
+        try {
+            String response;
             JSONObject jsonObject = new JSONObject(result);
-            //Toast.makeText(connectContext, jsonObject.getString("pwd"), Toast.LENGTH_SHORT).show();
-            Toast.makeText(connectContext, result, Toast.LENGTH_SHORT).show();
+            response=jsonObject.getString("response");
+            switch (response) {
+                case "0":
+                    Toast.makeText(connectContext, "Log-In Success!", Toast.LENGTH_LONG).show();
+                    Intent IntentSettingDevice = new Intent(activity, SettingDeviceActivity.class);
+                    activity.startActivity(IntentSettingDevice);
+                    break;
+                case "1":
+                    Toast.makeText(connectContext, "No exist in DB", Toast.LENGTH_SHORT).show();
+                    break;
+                case "2":
+                    Toast.makeText(connectContext, "Password is wrong", Toast.LENGTH_SHORT).show();
+                    break;
+                case "3":
+                    Toast.makeText(connectContext, "Lock account.\nPlease check the link in Email", Toast.LENGTH_SHORT).show();
+                    break;
+                case "4":
+                    Toast.makeText(connectContext, "Sign up in with this account", Toast.LENGTH_SHORT).show();
+                    break;
+                case "5":
+                    Toast.makeText(connectContext, "Password must be at least 8 character long", Toast.LENGTH_SHORT).show();
+                    break;
+                case "6":
+                    Toast.makeText(activity, "Sign Up Success!\n Please Check the link in Email. Activated your account", Toast.LENGTH_SHORT).show();
+                    Intent IntentSignIn = new Intent(activity, SignInActivity.class);
+                    activity.startActivity(IntentSignIn);
+                    break;
+                default:
+                    Toast.makeText(connectContext, "Exception!\nPlease Use Later", Toast.LENGTH_SHORT).show();
+            }
 
-            Intent IntentSettingDevice = new Intent(connectContext, SettingDeviceActivity.class);
-            ((Activity)connectContext).startActivity(IntentSettingDevice);
-
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
 //        if (result.equalsIgnoreCase("success")) {
-//            Toast.makeText(connectContext,"Success!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(connectContext, "Success!", Toast.LENGTH_SHORT).show();
 //            Intent IntentSettingDevice = new Intent(connectContext, SettingDeviceActivity.class);
-//            ((Activity)connectContext).startActivity(IntentSettingDevice);
+//            ((Activity) connectContext).startActivity(IntentSettingDevice);
 //
 //        } else if (result.equalsIgnoreCase("fail")) {
 //            Toast.makeText(connectContext,"Failed!", Toast.LENGTH_SHORT).show();
@@ -157,10 +187,10 @@ public  class HttpConnection extends AsyncTask<String, String, String> {
 //
 //        }else if(result.equalsIgnoreCase("")){
 //            Toast.makeText(connectContext,"!", Toast.LENGTH_SHORT).show();
-
+//
 //        }else{
-//            JSONObject jsonObject = new JSONObject(result);
 //            Toast.makeText(connectContext, result, Toast.LENGTH_SHORT).show();
 //        }
+//    }
     }
 }

@@ -1,6 +1,5 @@
 package com.example.pyojihye.airpollution;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -36,12 +35,8 @@ public class SignUpActivity extends AppCompatActivity {
                 return;
             }else{
                 if(password.equals(confirmPassword)){
-//                    HttpConnection httpConnectionSignUp = new HttpConnection(getApplicationContext());
-//                    httpConnectionSignUp.execute(email,password,confirmPassword,firstName,lastName);
-
-                    Intent signInIntent = new Intent(getApplicationContext(), SignInActivity.class);
-                    startActivity(signInIntent);
-                    finish();
+                    HttpConnection httpConnectionSignUp = new HttpConnection(SignUpActivity.this,getApplicationContext());
+                    httpConnectionSignUp.execute(email,password,confirmPassword,firstName,lastName);
                 }else{
                     Toast.makeText(getApplicationContext(), "This is not the same password and its confirmation.", Toast.LENGTH_LONG).show();
                 }

@@ -2,15 +2,14 @@ package com.example.pyojihye.airpollution;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -24,10 +23,11 @@ import java.util.Set;
  * Created by PYOJIHYE on 2016-08-03.
  */
 public class SettingDeviceActivity extends AppCompatActivity {
+    private static final int REQUEST_ENABLE_BT=1;
+
     private BluetoothAdapter myBluetoothAdapter;
     private Set<BluetoothDevice> pairedDevices;
     private ArrayAdapter<String> BTArrayAdapter;
-    private static final int REQUEST_ENABLE_BT = 1;
     private LocationManager locationManager;
 
     @Override
@@ -35,6 +35,9 @@ public class SettingDeviceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTitle("Setting Device");
         setContentView(R.layout.activity_setting_device);
+
+        ActionBar bar = getSupportActionBar();
+
 
         myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -57,7 +60,7 @@ public class SettingDeviceActivity extends AppCompatActivity {
         ImageViewUdoo.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                find(view);
+                //xxxx
             }
         });
 
@@ -65,7 +68,7 @@ public class SettingDeviceActivity extends AppCompatActivity {
         ImageViewHeart.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                find(view);
+                //xxxxx
             }
         });
     }
@@ -103,31 +106,5 @@ public class SettingDeviceActivity extends AppCompatActivity {
         }
     }
 
-    public void find(View view) {
-        if (myBluetoothAdapter.isDiscovering()) {
-            myBluetoothAdapter.cancelDiscovery();
-        }
-        else {
-            BTArrayAdapter.clear();
-            myBluetoothAdapter.startDiscovery();
-            registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
-        }
-    }
 
-    public void list(View view){
-        pairedDevices = myBluetoothAdapter.getBondedDevices();
-        for(BluetoothDevice device : pairedDevices)
-            BTArrayAdapter.add(device.getName()+ "\n" + device.getAddress());
-        Toast.makeText(getApplicationContext(),"Show Paired Devices",Toast.LENGTH_SHORT).show();
-    }
-    final BroadcastReceiver bReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-        String action = intent.getAction();
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                BTArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-                BTArrayAdapter.notifyDataSetChanged();
-            }
-        }
-    };
 }

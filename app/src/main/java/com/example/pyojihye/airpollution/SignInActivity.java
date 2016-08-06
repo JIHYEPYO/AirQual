@@ -27,12 +27,9 @@ public class SignInActivity extends AppCompatActivity {
 
                 if (email.equals("") || password.equals("")) {
                     Toast.makeText(getApplicationContext(), "Please fill in all information", Toast.LENGTH_LONG).show();
-                    return;
                 } else {
-//                    HttpConnection httpConnection = new HttpConnection(getApplicationContext());
-//                    httpConnection.execute(email,password);
-                    Intent IntentSettingDevice = new Intent(SignInActivity.this, SettingDeviceActivity.class);
-                    startActivity(IntentSettingDevice);
+                    HttpConnection httpConnectionSignIn = new HttpConnection(SignInActivity.this, getApplicationContext());
+                    httpConnectionSignIn.execute(email,password);
                 }
             }
         });
