@@ -7,13 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.pyojihye.airpollution.R;
 
+import P_Data.Util_STATUS;
+import P_Fragment.Fr_View_pager;
 import P_Manager.Realchart_Manager;
 import P_Manager.Realtime_Manager;
+import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 
 
 /**
@@ -26,12 +29,14 @@ public class Pager_Adapter extends PagerAdapter {
     Handler pHandler;
     View realtime_view;
     View realchart_view;
+    VerticalViewPager verticalViewPager;
     public static Realtime_Manager rm;
     public static Realchart_Manager rcm;
-    public Pager_Adapter(LayoutInflater inflater, Context context)
+    public Pager_Adapter(LayoutInflater inflater, Context context, VerticalViewPager verticalViewPager)
     {
         this.inflater=inflater;
         this.context=context;
+        this.verticalViewPager=verticalViewPager;
         //this.pHandler=adapter_handler;
 
     }
@@ -54,7 +59,8 @@ public class Pager_Adapter extends PagerAdapter {
                 mButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        Util_STATUS.RECEIVE_DATA_STATUS=true;
+                        Toast.makeText(context.getApplicationContext(),"start", Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -66,50 +72,49 @@ public class Pager_Adapter extends PagerAdapter {
                 view=inflater.inflate(R.layout.air_realtime,null);
                 realtime_view=view;
                 rm=new Realtime_Manager(view);
-                //popupMenu=new PopupMenu(context,view);
-                //FrameLayout fr=(FrameLayout)view.findViewById(R.id.)
-                LinearLayout ll=(LinearLayout)view.findViewById(R.id.all_layout);
-                ll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
+                FrameLayout fr=(FrameLayout)view.findViewById(R.id.CO_Frame);
+                fr.setOnClickListener(listener);
+                fr=(FrameLayout)view.findViewById(R.id.NO2_Frame);
+                fr.setOnClickListener(listener);
 
-                        //popupMenu.getMenuInflater().inflate(R.menu.popup_menu,popupMenu.getMenu());
-                        // here you set what you want to do when user clicks your button,
-                        // e.g. launch a new activity
-                        //Toast.makeText(context.getApplicationContext(),String.valueOf(v.getId()),Toast.LENGTH_SHORT).show();
-                    }
-                });
+                fr=(FrameLayout)view.findViewById(R.id.O3_Frame);
+                fr.setOnClickListener(listener);
+                fr=(FrameLayout)view.findViewById(R.id.PM_Frame);
+                fr.setOnClickListener(listener);
+                fr=(FrameLayout)view.findViewById(R.id.SO2_Frame);
+                fr.setOnClickListener(listener);
+                fr=(FrameLayout)view.findViewById(R.id.TEMP_Frame);
+                fr.setOnClickListener(listener);
+
                 container.addView(view);
+
                 break;
             }
             case 2:
             {
                 view=inflater.inflate(R.layout.air_realchart,null);
-                rcm=new Realchart_Manager(view);
+                rcm=new Realchart_Manager(view,context);
                 realchart_view=view;
+                Button btn=(Button)realchart_view.findViewById(R.id.realchart_co_button);
+                btn.setOnClickListener(air_listener);
+                btn=(Button)realchart_view.findViewById(R.id.realchart_so2_button);
+                btn.setOnClickListener(air_listener);
+                btn=(Button)realchart_view.findViewById(R.id.realchart_no2_button);
+                btn.setOnClickListener(air_listener);
+                btn=(Button)realchart_view.findViewById(R.id.realchart_o3_button);
+                btn.setOnClickListener(air_listener);
+                btn=(Button)realchart_view.findViewById(R.id.realchart_all_button);
+                btn.setOnClickListener(air_listener);
+                btn=(Button)realchart_view.findViewById(R.id.realchart_pm_button);
+                btn.setOnClickListener(air_listener);
 
                 container.addView(view);
 
-                ListView ll=(ListView)view.findViewById(R.id.list_container);
-                ListView_Adapter adapter=new ListView_Adapter();
-                ll.setAdapter(adapter);
-                adapter.addItem("CO2","","#FFAF0A");
-                adapter.addItem("SO2","","#CD3C3C");
-                adapter.addItem("NO2","","#FF02E402");
-                adapter.addItem("O3","","#FFFF7F02");
-                adapter.addItem("TEMP","","#FF904098");
-                adapter.addItem("PM","","#FF904098");
-                adapter.notifyDataSetChanged();
-                container.addView(view);
                 break;
             }
         }
-
-
-
         return view;
-        //return super.instantiateItem(container, position);
     }
 
     @Override
@@ -121,4 +126,57 @@ public class Pager_Adapter extends PagerAdapter {
     public int getItemPosition(Object object) {
         return POSITION_NONE;
     }
+
+    View.OnClickListener air_listener=new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Button btn=(Button)view;
+            Util_STATUS.Chart_Select= (String) btn.getText();
+        }
+    };
+
+    View.OnClickListener listener=new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId())
+            {
+                case R.id.CO_Frame:
+                {
+                    Util_STATUS.Chart_Select="CO";
+                    Fr_View_pager.RT_v_viewpager.setCurrentItem(2);
+                    break;
+                }
+                case R.id.NO2_Frame:
+                {
+                    Util_STATUS.Chart_Select="NO2";
+                    Fr_View_pager.RT_v_viewpager.setCurrentItem(2);
+                    break;
+                }
+                case R.id.O3_Frame:
+                {
+                    Util_STATUS.Chart_Select="O3";
+                    Fr_View_pager.RT_v_viewpager.setCurrentItem(2);
+                    break;
+                }
+                case R.id.PM_Frame:
+                {
+                    Util_STATUS.Chart_Select="PM";
+                    Fr_View_pager.RT_v_viewpager.setCurrentItem(2);
+                    break;
+                }
+                case R.id.SO2_Frame:
+                {
+                    Util_STATUS.Chart_Select="SO2";
+                    Fr_View_pager.RT_v_viewpager.setCurrentItem(2);
+                    break;
+                }
+                case R.id.TEMP_Frame:
+                {
+                    Util_STATUS.Chart_Select="TEMP";
+                    Fr_View_pager.RT_v_viewpager.setCurrentItem(2);
+                    break;
+                }
+            }
+        }
+    };
 }

@@ -18,28 +18,26 @@ import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 
 public class Fr_View_pager extends Fragment {
 
-    VerticalViewPager v_viewpager;
+    public static VerticalViewPager RT_v_viewpager;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.fr_viewpager_layout,container,false);
 
-        //v_viewpager=new VerticalViewPager(getApplicationContext());
-        v_viewpager=new VerticalViewPager(inflater.getContext());
-        //v_viewpager=(VerticalViewPager)findViewById(R.id.pager);
-        v_viewpager=(VerticalViewPager)view.findViewById(R.id.pager);
-        //p_adapter=new Pager_Adapter(getLayoutInflater(),getApplicationContext(),pHandler);
-        //v_viewpager.setAdapter(p_adapter);
-        v_viewpager.setCurrentItem(0);
-        v_viewpager.setOffscreenPageLimit(5);
-        v_viewpager.setAdapter(MainActivity.pa);
+        RT_v_viewpager =new VerticalViewPager(inflater.getContext());
 
-        //Air_Data_Service ADS=new Air_Data_Service(pHandler);
+        RT_v_viewpager =(VerticalViewPager)view.findViewById(R.id.pager);
+
+        RT_v_viewpager.setCurrentItem(0);
+        RT_v_viewpager.setOffscreenPageLimit(5);
+        RT_v_viewpager.setAdapter(MainActivity.pa);
         return view;
 
 
-
-        //return super.onCreateView(inflater, container, savedInstanceState);
+    }
+    public VerticalViewPager getV_viewpager()
+    {
+        return RT_v_viewpager;
     }
 }

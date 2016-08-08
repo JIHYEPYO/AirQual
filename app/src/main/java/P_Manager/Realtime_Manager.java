@@ -38,8 +38,14 @@ public class Realtime_Manager {
         local=(TextView)realtime_view.findViewById(R.id.heart_text);
         local.setText("NA");
     }
+    int count=0;
     public void Set_realtime(Air_Data air)
     {
+        count++;
+        if(count==2)
+        {
+            count++;
+        }
         TextView local=(TextView)realtime_view.findViewById(R.id.CO_data);
         set_background(String.valueOf(air.co),local);
         local=(TextView)realtime_view.findViewById(R.id.SO2_data);

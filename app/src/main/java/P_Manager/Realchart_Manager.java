@@ -1,7 +1,10 @@
 package P_Manager;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.pyojihye.airpollution.R;
 import com.github.mikephil.charting.charts.LineChart;
@@ -10,14 +13,12 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
-import java.util.ArrayList;
+import java.util.Hashtable;
 
 import P_Data.Air_Data;
+import P_Data.DBHelper;
+import P_Data.Util_STATUS;
 
 /**
  * Created by user on 2016-07-25.
@@ -26,11 +27,12 @@ public class Realchart_Manager {
     View realtime_view;
     private LineChart mChart;
     private PieChart pChart;
-    public Realchart_Manager(View view) {
-
+    private DBHelper helper;
+    public Realchart_Manager(View view, Context context) {
+        realtime_view=view;
         /* Linechart init*/
-        mChart = (LineChart)view.findViewById(R.id.all_chart);
-        mChart.setDescription("");
+        mChart = (LineChart)view.findViewById(R.id.air_chart);
+        //mChart.setDescription.("");
         mChart.setNoDataTextDescription("You need to provide data for the chart.");
 
         mChart.setTouchEnabled(true);
@@ -38,127 +40,317 @@ public class Realchart_Manager {
         mChart.setDragEnabled(true);
         mChart.setScaleEnabled(true);
         mChart.setDrawGridBackground(false);
-
-
         mChart.setPinchZoom(true);
-        mChart.setVisibleXRangeMaximum(500);
+        mChart.setVisibleXRangeMaximum(1000);
         LineData data = new LineData();
         data.setValueTextColor(Color.WHITE);
 
         // add empty data
         mChart.setData(data);
-
-        /*piechart init*/
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
-
-       // PieDataSet dataSet = new PieDataSet(entries, "Election Results");
-        final ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(4f, 0));
-
-        ArrayList<String> labels = new ArrayList<String>();
-        labels.add("January");
-
-        PieDataSet dataset = new PieDataSet(entries, "# of Calls");
-        PieData data2 = new PieData(labels, dataset);
-        pChart=(PieChart)view.findViewById(R.id.pie_chart);
-
-        pChart.setData(data2);
-        pChart.setClickable(true);
-        pChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            //3이 주황색
-            //1이 초록색
-            //
-            //4가 보라색
-            @Override
-            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-               switch (e.getXIndex())
-               {
-                   case 1:
-                   {
-                       mChart.getData().getDataSets().get(1).setVisible(false);
-                       mChart.getData().getDataSets().get(2).setVisible(false);
-                       mChart.getData().getDataSets().get(3).setVisible(false);
-                       mChart.getData().getDataSets().get(4).setVisible(false);
-                       mChart.getData().getDataSets().get(5).setVisible(false);
-                       mChart.getData().getDataSets().get(0).setVisible(true);
-                       break;
-                   }
-                   case 2:
-                   {
-                       mChart.getData().getDataSets().get(0).setVisible(false);
-                       mChart.getData().getDataSets().get(2).setVisible(false);
-                       mChart.getData().getDataSets().get(3).setVisible(false);
-                       mChart.getData().getDataSets().get(4).setVisible(false);
-                       mChart.getData().getDataSets().get(5).setVisible(false);
-                       mChart.getData().getDataSets().get(1).setVisible(true);
-                       break;
-                   }
-
-                   case 3:
-                   {
-                       mChart.getData().getDataSets().get(0).setVisible(false);
-                       mChart.getData().getDataSets().get(1).setVisible(false);
-                       mChart.getData().getDataSets().get(3).setVisible(false);
-                       mChart.getData().getDataSets().get(4).setVisible(false);
-                       mChart.getData().getDataSets().get(5).setVisible(false);
-                       mChart.getData().getDataSets().get(2).setVisible(true);
-                       break;
-                   }
-
-                   case 4:
-                   {
-                       mChart.getData().getDataSets().get(0).setVisible(false);
-                       mChart.getData().getDataSets().get(1).setVisible(false);
-                       mChart.getData().getDataSets().get(2).setVisible(false);
-                       mChart.getData().getDataSets().get(4).setVisible(false);
-                       mChart.getData().getDataSets().get(5).setVisible(false);
-                       mChart.getData().getDataSets().get(3).setVisible(true);
-                       break;
-                   }
-
-                   case 5:
-                   {
-                       mChart.getData().getDataSets().get(0).setVisible(false);
-                       mChart.getData().getDataSets().get(1).setVisible(false);
-                       mChart.getData().getDataSets().get(2).setVisible(false);
-                       mChart.getData().getDataSets().get(3).setVisible(false);
-                       mChart.getData().getDataSets().get(5).setVisible(false);
-                       mChart.getData().getDataSets().get(4).setVisible(true);
-                       break;
-
-                   }
-
-                   case 6:
-                   {
-                       mChart.getData().getDataSets().get(0).setVisible(false);
-                       mChart.getData().getDataSets().get(1).setVisible(false);
-                       mChart.getData().getDataSets().get(2).setVisible(false);
-                       mChart.getData().getDataSets().get(3).setVisible(false);
-                       mChart.getData().getDataSets().get(4).setVisible(false);
-                       mChart.getData().getDataSets().get(5).setVisible(true);
-                       break;
-                   }
+        helper=new DBHelper(context);
 
 
-               }
-
-                //1
-            }
-
-            @Override
-            public void onNothingSelected() {
-
-            }
-        });
     }
     int count=1;
+    Hashtable<String,Integer> max_value=new Hashtable();
+    Hashtable<String,Integer> min_value=new Hashtable();
+
+    public void Set_Data(final Air_Data air) //Top Value , MinValue 수정
+    {
+        final TextView max_text=(TextView)realtime_view.findViewById(R.id.chart_max_val);
+        if(max_value.size()==0)
+        {
+            max_value.put("CO",0);
+            max_value.put("SO2",0);
+            max_value.put("NO2",0);
+            max_value.put("O3",0);
+            max_value.put("PM",0);
+        }
+        switch (Util_STATUS.Chart_Select)
+        {
+
+            case "CO":
+            {
+                if(max_value.get("CO")<air.co)
+                {
+                    max_value.put("CO",air.co);
+
+                    max_text.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            max_text.setText(String.valueOf(air.co));
+                        }
+                    });
+                   // realtime_view.findViewById()
+                }
+                break;
+            }
+            case "SO2":
+            {
+                if(max_value.get("SO2")<air.so2)
+                {
+                    max_value.put("SO2",air.so2);
+                    max_text.setText(String.valueOf(air.so2));
+                }
+                break;
+            }
+            case "NO2":
+            {
+                if(max_value.get("NO2")<air.no2)
+                {
+                    max_value.put("NO2",air.no2);
+                    max_text.setText(String.valueOf(air.no2));
+                }
+                break;
+            }
+            case "O3":
+            {
+                if(max_value.get("O3")<air.o3)
+                {
+                    max_value.put("O3",air.o3);
+                    max_text.setText(String.valueOf(air.o3));
+                }
+                break;
+            }
+            case "PM":
+            {
+                if(max_value.get("PM")<air.pm2_5)
+                {
+                    max_value.put("PM",air.pm2_5);
+                    max_text.setText(String.valueOf(air.pm2_5));
+                }
+                break;
+            }
+        }
+        final TextView min_text=(TextView)realtime_view.findViewById(R.id.chart_min_val);
+        if(min_value.size()==0)
+        {
+            min_value.put("CO",500);
+            min_value.put("SO2",500);
+            min_value.put("NO2",500);
+            min_value.put("O3",500);
+            min_value.put("PM",500);
+        }
+
+        switch (Util_STATUS.Chart_Select)
+        {
+
+            case "CO":
+            {
+                if(min_value.get("CO")>air.co)
+                {
+                    min_value.put("CO",air.co);
+
+                    min_text.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            min_text.setText(String.valueOf(air.co));
+                        }
+                    });
+
+
+                    // realtime_view.findViewById()
+                }
+                mChart.getData().getDataSets().get(1).setVisible(false);
+                mChart.getData().getDataSets().get(1).setValueTextSize(0);
+                mChart.getData().getDataSets().get(2).setVisible(false);
+                mChart.getData().getDataSets().get(2).setValueTextSize(0);
+                mChart.getData().getDataSets().get(3).setVisible(false);
+                mChart.getData().getDataSets().get(3).setValueTextSize(0);
+                mChart.getData().getDataSets().get(4).setVisible(false);
+                mChart.getData().getDataSets().get(4).setValueTextSize(0);
+
+                mChart.getData().getDataSets().get(0).setVisible(true);
+                mChart.getData().getDataSets().get(0).setValueTextSize(10);
+
+                break;
+            }
+            case "SO2":
+            {
+                if(min_value.get("SO2")<air.so2)
+                {
+                    min_value.put("SO2",air.so2);
+                    min_text.setText(String.valueOf(air.so2));
+                }
+                mChart.getData().getDataSets().get(0).setVisible(false);
+                mChart.getData().getDataSets().get(0).setValueTextSize(0);
+                mChart.getData().getDataSets().get(2).setVisible(false);
+                mChart.getData().getDataSets().get(2).setValueTextSize(0);
+                mChart.getData().getDataSets().get(3).setVisible(false);
+                mChart.getData().getDataSets().get(3).setValueTextSize(0);
+                mChart.getData().getDataSets().get(4).setVisible(false);
+                mChart.getData().getDataSets().get(4).setValueTextSize(0);
+
+                mChart.getData().getDataSets().get(1).setVisible(true);
+                mChart.getData().getDataSets().get(1).setValueTextSize(10);
+                break;
+            }
+            case "NO2":
+            {
+                if(min_value.get("NO2")<air.no2)
+                {
+                    min_value.put("NO2",air.no2);
+                    min_text.setText(String.valueOf(air.no2));
+                }
+                mChart.getData().getDataSets().get(0).setVisible(false);
+                mChart.getData().getDataSets().get(0).setValueTextSize(0);
+                mChart.getData().getDataSets().get(1).setVisible(false);
+                mChart.getData().getDataSets().get(1).setValueTextSize(0);
+                mChart.getData().getDataSets().get(3).setVisible(false);
+                mChart.getData().getDataSets().get(3).setValueTextSize(0);
+                mChart.getData().getDataSets().get(4).setVisible(false);
+                mChart.getData().getDataSets().get(4).setValueTextSize(0);
+
+                mChart.getData().getDataSets().get(2).setVisible(true);
+                mChart.getData().getDataSets().get(2).setValueTextSize(10);
+
+
+                break;
+            }
+            case "O3":
+            {
+                if( min_value.get("O3")<air.o3)
+                {
+                    min_value.put("O3",air.o3);
+                    min_text.setText(String.valueOf(air.o3));
+                }
+                mChart.getData().getDataSets().get(0).setVisible(false);
+                mChart.getData().getDataSets().get(0).setValueTextSize(0);
+                mChart.getData().getDataSets().get(1).setVisible(false);
+                mChart.getData().getDataSets().get(1).setValueTextSize(0);
+                mChart.getData().getDataSets().get(2).setVisible(false);
+                mChart.getData().getDataSets().get(2).setValueTextSize(0);
+                mChart.getData().getDataSets().get(4).setVisible(false);
+                mChart.getData().getDataSets().get(4).setValueTextSize(0);
+
+                mChart.getData().getDataSets().get(3).setVisible(true);
+                mChart.getData().getDataSets().get(3).setValueTextSize(10);
+
+                break;
+            }
+            case "PM":
+            {
+                if( min_value.get("PM")<air.pm2_5)
+                {
+                    min_value.put("PM",air.pm2_5);
+                    min_text.setText(String.valueOf(air.pm2_5));
+                }
+                mChart.getData().getDataSets().get(0).setVisible(false);
+                mChart.getData().getDataSets().get(0).setValueTextSize(0);
+                mChart.getData().getDataSets().get(1).setVisible(false);
+                mChart.getData().getDataSets().get(1).setValueTextSize(0);
+                mChart.getData().getDataSets().get(2).setVisible(false);
+                mChart.getData().getDataSets().get(2).setValueTextSize(0);
+                mChart.getData().getDataSets().get(3).setVisible(false);
+                mChart.getData().getDataSets().get(3).setValueTextSize(0);
+
+                mChart.getData().getDataSets().get(4).setVisible(true);
+                mChart.getData().getDataSets().get(4).setValueTextSize(10);
+                break;
+            }
+            case "ALL":
+            {
+                mChart.getData().getDataSets().get(0).setVisible(true);
+                mChart.getData().getDataSets().get(0).setValueTextSize(10);
+                mChart.getData().getDataSets().get(1).setVisible(true);
+                mChart.getData().getDataSets().get(1).setValueTextSize(10);
+                mChart.getData().getDataSets().get(2).setVisible(true);
+                mChart.getData().getDataSets().get(2).setValueTextSize(10);
+                mChart.getData().getDataSets().get(3).setVisible(true);
+                mChart.getData().getDataSets().get(3).setValueTextSize(10);
+
+                mChart.getData().getDataSets().get(4).setVisible(true);
+                mChart.getData().getDataSets().get(4).setValueTextSize(10);
+            }
+        }
+        final TextView today_max_text=(TextView)realtime_view.findViewById(R.id.chart_max_val);
+        final TextView today_min_text=(TextView)realtime_view.findViewById(R.id.chart_min_val);
+        final TextView today_avg_text=(TextView)realtime_view.findViewById(R.id.chart_avg);
+        today_max_text.setText(helper.Today_max_val());
+        today_min_text.setText(helper.Today_min_val());
+        today_avg_text.setText(helper.Today_avg_val());
+    }
+    public void Set_Data_Color(Air_Data air) //Avg 30 sec 수정
+    {
+        //LinearLayout linear=(LinearLayout)realtime_view.findViewById(R.id.chart_color1);
+        //LinearLayout linear2=(LinearLayout)realtime_view.findViewById(R.id.chart_color2);
+        //LinearLayout linear3=(LinearLayout)realtime_view.findViewById(R.id.chart_color3);
+        LinearLayout linear4=(LinearLayout)realtime_view.findViewById(R.id.chart_color4);
+        LinearLayout linear5=(LinearLayout)realtime_view.findViewById(R.id.chart_color5);
+        final TextView max_text=(TextView)realtime_view.findViewById(R.id.chart_max_val);
+        final TextView min_text=(TextView)realtime_view.findViewById(R.id.chart_min_val);
+        final TextView avg_text=(TextView)realtime_view.findViewById(R.id.chart_avg);
+
+
+        switch (Util_STATUS.Chart_Select)
+        {
+            case "CO":
+            {
+                //linear.setBackgroundColor(Color.parseColor("#5EC75E"));
+                //linear2.setBackgroundColor(Color.parseColor("#5EC75E"));
+                //linear3.setBackgroundColor(Color.parseColor("#5EC75E"));
+                linear4.setBackgroundColor(Color.parseColor("#5EC75E"));
+                linear5.setBackgroundColor(Color.parseColor("#5EC75E"));
+                max_text.setTextColor(Color.parseColor("#5EC75E"));
+                min_text.setTextColor(Color.parseColor("#5EC75E"));
+                avg_text.setTextColor(Color.parseColor("#5EC75E"));
+                break;
+            }
+            case "SO2":
+            {
+                //linear.setBackgroundColor(Color.parseColor("#FFAF0A"));
+                //linear2.setBackgroundColor(Color.parseColor("#FFAF0A"));
+                //linear3.setBackgroundColor(Color.parseColor("#FFAF0A"));
+                linear4.setBackgroundColor(Color.parseColor("#FFAF0A"));
+                linear5.setBackgroundColor(Color.parseColor("#FFAF0A"));
+                max_text.setTextColor(Color.parseColor("#FFAF0A"));
+                min_text.setTextColor(Color.parseColor("#FFAF0A"));
+                avg_text.setTextColor(Color.parseColor("#FFAF0A"));
+                break;
+            }
+            case "NO2":
+            {
+                //linear.setBackgroundColor(Color.parseColor("#CD3C3C"));
+                //linear2.setBackgroundColor(Color.parseColor("#CD3C3C"));
+                //linear3.setBackgroundColor(Color.parseColor("#CD3C3C"));
+                linear4.setBackgroundColor(Color.parseColor("#CD3C3C"));
+                linear5.setBackgroundColor(Color.parseColor("#CD3C3C"));
+                max_text.setTextColor(Color.parseColor("#CD3C3C"));
+                min_text.setTextColor(Color.parseColor("#CD3C3C"));
+                avg_text.setTextColor(Color.parseColor("#CD3C3C"));
+                break;
+            }
+            case "O3":
+            {
+                //linear.setBackgroundColor(Color.parseColor("#FF02E402"));
+                //linear2.setBackgroundColor(Color.parseColor("#FF02E402"));
+                //linear3.setBackgroundColor(Color.parseColor("#FF02E402"));
+                linear4.setBackgroundColor(Color.parseColor("#FF02E402"));
+                linear5.setBackgroundColor(Color.parseColor("#FF02E402"));
+                max_text.setTextColor(Color.parseColor("#FF02E402"));
+                min_text.setTextColor(Color.parseColor("#FF02E402"));
+                avg_text.setTextColor(Color.parseColor("#FF02E402"));
+                break;
+            }
+            case "PM":
+            {
+                //linear.setBackgroundColor(Color.parseColor( "#FF904098"));
+                //linear2.setBackgroundColor(Color.parseColor( "#FF904098"));
+                //linear3.setBackgroundColor(Color.parseColor( "#FF904098"));
+                linear4.setBackgroundColor(Color.parseColor( "#FF904098"));
+                linear5.setBackgroundColor(Color.parseColor( "#FF904098"));
+                max_text.setTextColor(Color.parseColor( "#FF904098"));
+                min_text.setTextColor(Color.parseColor( "#FF904098"));
+                avg_text.setTextColor(Color.parseColor( "#FF904098"));
+                break;
+            }
+        }
+    }
     public void Set_empty()
     {
         PieData data=pChart.getData();
         data.clearValues();
-        //data.getDataSet().clear();
-        //data.getDataSet().setVisible(false);
+
         LineData data2=mChart.getData();
         data2.clearValues();
         /*for(int i=0;i<data2.getDataSetCount();i++)
@@ -166,82 +358,7 @@ public class Realchart_Manager {
             data2.getDataSetByIndex(i).setVisible(false);
         }*/
     }
-    public void Set_Realpie(Air_Data air) throws InterruptedException {
-        ArrayList<Integer > air_array=new ArrayList<>();
-        //ArrayList<HashMap<String,Integer>>air_array=new ArrayList<>();
-        air_array.add(air.co);
-        air_array.add(air.so2);
-        air_array.add(air.no2);
-        air_array.add(air.o3);
-        air_array.add(air.time);
-        air_array.add(air.pm2_5);
 
-        PieData data=pChart.getData();
-        PieDataSet set=null;
-        if(data!=null)
-        {
-            data.removeDataSet(0);
-            set=data.getDataSetByIndex(1);
-            /*if(set==null)
-            {
-                for(int i=1;i<6;i++)
-                {
-                    set=createPieSet(i);
-                    data.addDataSet(set);
-                }
-            }*/
-            ArrayList<Entry> yVals1 = new ArrayList<Entry>();
-            for (int j = 0; j < 6; j++)
-            {
-                yVals1.add(new Entry(air_array.get(j), j)); //yvals 은 수치값
-            }
-            ArrayList<String> xVals = new ArrayList<String>();
-            /*for(int j = 0; j < 6;j++)
-            {
-                xVals.add(String.valueOf(j)); //xvals은 이름
-            }*/
-            xVals.add("CO2");
-            xVals.add("SO2");
-            xVals.add("NO2");
-            xVals.add("O3");
-            xVals.add("TEMP");
-            xVals.add("PM");
-
-            PieDataSet dataSet = new PieDataSet(yVals1,null);
-            dataSet.setSliceSpace(3);
-            dataSet.setSelectionShift(5);
-
-            ArrayList<Integer> colors = new ArrayList<Integer>();
-            colors.add(Color.parseColor("#5EC75E"));
-            colors.add(Color.parseColor("#FFAF0A"));
-            colors.add(Color.parseColor("#CD3C3C"));
-            colors.add(Color.parseColor("#FF02E402"));
-            colors.add(Color.parseColor("#FFFF7F02"));
-            colors.add(Color.parseColor( "#FF904098"));
-
-            dataSet.setColors(colors);
-
-
-            //instantiate pie data object now
-
-            PieData data2 = new PieData(xVals,dataSet);
-            data.setValueFormatter(new PercentFormatter());
-            data.setValueTextSize(11f);
-            data.setValueTextColor(Color.GRAY);
-
-
-            pChart.setData(data2);
-
-            //undo all highlight
-
-            pChart.highlightValue(null);
-
-            //update pie chart
-
-        }
-        pChart.notifyDataSetChanged();
-        pChart.invalidate();
-    }
     public void Set_Realchart2(Air_Data air)
     {
         LineData data=mChart.getData();
@@ -251,7 +368,7 @@ public class Realchart_Manager {
             set=data.getDataSetByIndex(0);
             if(set==null) //이곳에서 6개 만들어줌
             {
-                for(int i=0;i<6;i++)
+                for(int i=0;i<5;i++)
                 {
                     set=createSet(i);
                     data.addDataSet(set);
@@ -259,7 +376,7 @@ public class Realchart_Manager {
 
             }
 
-            for(int i=0;i<6;i++)
+            for(int i=0;i<5;i++)
             {
                 set=(LineDataSet)data.getDataSetByIndex(i);
                 if (data.getXValCount() > 20) {
@@ -269,37 +386,31 @@ public class Realchart_Manager {
                     {
                         case 0:
                         {
-                            data.addEntry(new Entry((float)air.co ,20), i);
+                            data.addEntry(new Entry((float)air.co ,10), i);
                             break;
                         }
 
                         case 1:
                         {
-                            data.addEntry(new Entry((float)air.so2 ,20), i);
+                            data.addEntry(new Entry((float)air.so2 ,10), i);
                             break;
                         }
 
                         case 2:
                         {
-                            data.addEntry(new Entry((float)air.no2 ,20), i);
+                            data.addEntry(new Entry((float)air.no2 ,10), i);
                             break;
                         }
 
                         case 3:
                         {
-                            data.addEntry(new Entry((float)air.o3 ,20), i);
+                            data.addEntry(new Entry((float)air.o3 ,10), i);
                             break;
                         }
 
                         case 4:
                         {
-                            data.addEntry(new Entry((float)air.time,20), i);
-                            break;
-                        }
-
-                        case 5:
-                        {
-                            data.addEntry(new Entry((float)air.pm2_5 ,20), i);
+                            data.addEntry(new Entry((float)air.pm2_5 ,10), i);
                             break;
                         }
 
@@ -340,12 +451,6 @@ public class Realchart_Manager {
 
                         case 4:
                         {
-                            data.addEntry(new Entry((float)air.time,set.getEntryCount()), i);
-                            break;
-                        }
-
-                        case 5:
-                        {
                             data.addEntry(new Entry((float)air.pm2_5 ,set.getEntryCount()), i);
                             break;
                         }
@@ -371,48 +476,6 @@ public class Realchart_Manager {
     }
 
 
-    public void Set_Realchart(Air_Data air) //차트 1개띄우는거 완성된거
-    {
-        //String entry_date_time = new SimpleDateFormat("MMM d - HH:mm:ss").format(new Date());
-        LineData data=mChart.getData();
-        LineDataSet set=null;
-        if (data != null) {
-            set=data.getDataSetByIndex(0);
-            if(set==null)
-            {
-                set= new LineDataSet(null, "CO2");
-                set.setDrawCubic(true);
-                set.setColor(Color.parseColor("#5EC75E"));
-                set.setCircleColor(Color.parseColor("#5EC75E"));
-                set.setLineWidth(2);
-                data.addDataSet(set);
-            }
-            if (data.getXValCount() > 20) {
-
-                data.getXVals().remove(0);
-                set.removeEntry(0);
-                data.getXVals().add(String.valueOf(count++));
-                data.addEntry(new Entry((float)air.co ,20), 0);
-                for (int i=0; i < set.getEntryCount(); i++) {
-                    Entry e = set.getEntryForXIndex(i);
-                    if (e==null) continue;
-                    e.setXIndex(e.getXIndex() - 1);
-                }
-                //set.setVisible(false); 이걸로 나타남 사라짐 나타낼거
-                //data.setValueTextSize(0);
-            }
-            else{
-                data.getXVals().add(String.valueOf(count++));
-                data.addEntry(new Entry((float)air.co ,set.getEntryCount()), 0);
-            }
-
-            mChart.notifyDataSetChanged();
-            mChart.invalidate();
-
-        }
-
-
-    }
     private LineDataSet createSet(int count) {
 
         LineDataSet set=new LineDataSet(null,null);
@@ -460,79 +523,15 @@ public class Realchart_Manager {
             }
             case 4:
             {
-                set= new LineDataSet(null, "TEMP");
-                set.setColor(Color.parseColor("#FFFF7F02"));
-                set.setCircleColor(Color.parseColor("#FFFF7F02"));
-                set.setLineWidth(3);
-                break;
-            }
-            case 5:
-            {
                 set= new LineDataSet(null, "PM");
                 set.setColor(Color.parseColor("#FF904098"));
                 set.setCircleColor(Color.parseColor("#FF904098"));
                 set.setLineWidth(3);
-
                 break;
             }
-
         }
         set.setDrawCubic(true);
         return set;
     }
-    private PieDataSet createPieSet(int count) {
 
-        PieDataSet set=new PieDataSet(null,null);
-        switch (count)
-        {
-            case 0:
-            {
-                set=new PieDataSet(null,"CO2");
-
-                set.setColor(Color.parseColor("#5EC75E"));
-
-                break;
-            }
-            case 1:
-            {
-                set= new PieDataSet(null, "SO2");
-                set.setColor(Color.parseColor("#FFAF0A"));
-
-
-                break;
-            }
-            case 2:
-            {
-                set= new PieDataSet(null, "NO2");
-
-                set.setColor(Color.parseColor("#CD3C3C"));
-
-                break;
-            }
-            case 3:
-            {
-                set= new PieDataSet(null, "O3");
-                set.setColor(Color.parseColor("#FF02E402"));
-
-                break;
-            }
-            case 4:
-            {
-                set= new PieDataSet(null, "TEMP");
-                set.setColor(Color.parseColor("#FFFF7F02"));
-
-                break;
-            }
-            case 5:
-            {
-                set= new PieDataSet(null, "PM");
-                set.setColor(Color.parseColor("#FF904098"));
-
-                break;
-            }
-
-        }
-
-        return set;
-    }
 }

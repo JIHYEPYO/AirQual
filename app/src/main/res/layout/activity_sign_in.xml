@@ -7,7 +7,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp"
-    android:background="#aac679"
+    android:background="@color/colorSignInBackGround"
     android:gravity="center">
 
     <EditText
@@ -42,7 +42,7 @@
         android:layout_height="40dp"
         android:text="LOGIN"
         android:id="@+id/buttonLogin"
-        android:background="#4f9e30"
+        android:background="@color/colorButtonLogInBackGround"
         android:textColor="@color/colorAccent"
         android:textSize="13pt"
         android:layout_below="@+id/editTextPassword"
@@ -58,14 +58,14 @@
         android:layout_height="wrap_content"
         android:text="Not a member? Sign up now!"
         android:textSize="10pt"
-        android:id="@+id/textView"
+        android:id="@+id/textViewSignIn"
         android:layout_below="@+id/buttonLogin"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:textColor="#ffffff"
+        android:textColor="@color/colorAccent"
         android:singleLine="true"
         android:textStyle="italic"
-        android:onClick="textViewClick"
+        android:onClick="textViewSignInClick"
         android:clickable="true"
         android:gravity="center" />
 

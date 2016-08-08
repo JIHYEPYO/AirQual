@@ -5,8 +5,8 @@ import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +19,16 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Marker;
 
+import P_Data.Air_Data;
 import P_Manager.GMap_Manager;
-import P_Utils.Util_STATUS;
 
 /**
  * Created by user on 2016-08-02.
  */
-public class Fr_R_G_Map extends Fragment implements OnMapReadyCallback {
+public class Fr_R_G_Map extends Fragment implements OnMapReadyCallback,GoogleMap.OnMarkerClickListener,GoogleMap.OnCircleClickListener,GoogleMap.OnMapClickListener {
 
     LatLng latLng;
 
@@ -41,12 +40,13 @@ public class Fr_R_G_Map extends Fragment implements OnMapReadyCallback {
     public static GoogleMap gMap = null;
     //MapFragment
 
-    @Nullable
+    View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_map, container, false);
+        view = inflater.inflate(R.layout.fragment_map, container, false);
+
         //MapFragment map = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment_map);
         //map.getMapAsync(this);
         //return view;
@@ -70,6 +70,7 @@ public class Fr_R_G_Map extends Fragment implements OnMapReadyCallback {
         btn.setOnClickListener(onClickListener);
         btn=(Button)view.findViewById(R.id.PM_button);
         btn.setOnClickListener(onClickListener);
+
         return view;
         // mapFragment.getMapAsync(this);
         //return inflater.inflate(R.layout.fragment_map,container,false);
@@ -78,25 +79,41 @@ public class Fr_R_G_Map extends Fragment implements OnMapReadyCallback {
     Button.OnClickListener onClickListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
+            Button btn;
             switch (view.getId()) {
 
                 case R.id.CO_button :
-                    Util_STATUS.GMap_Realtime_set="CO";
+                    P_Data.Util_STATUS.GMap_Realtime_set="CO";
+
+                    btn=((Button)view.findViewById(R.id.CO_button));
+                    btn.setBackgroundColor(Color.DKGRAY);
                     break ;
                 case R.id.SO2_button :
-                    Util_STATUS.GMap_Realtime_set="SO2";
+                    P_Data.Util_STATUS.GMap_Realtime_set="SO2";
+                    btn=((Button)view.findViewById(R.id.SO2_button));
+                    btn.setBackgroundColor(Color.DKGRAY);
                     break ;
                 case R.id.NO_button :
-                    Util_STATUS.GMap_Realtime_set="NO2";
+                    P_Data.Util_STATUS.GMap_Realtime_set="NO2";
+
+                    btn=((Button)view.findViewById(R.id.NO_button));
+                    btn.setBackgroundColor(Color.DKGRAY);
                     break ;
                 case R.id.O3_button :
-                    Util_STATUS.GMap_Realtime_set="O3";
+                    P_Data.Util_STATUS.GMap_Realtime_set="O3";
+
+                    btn=((Button)view.findViewById(R.id.O3_button));
+                    btn.setBackgroundColor(Color.DKGRAY);
                     break ;
                 case R.id.PM_button :
-                    Util_STATUS.GMap_Realtime_set="PM";
+                    P_Data.Util_STATUS.GMap_Realtime_set="PM";
+                    btn=((Button)view.findViewById(R.id.PM_button));
+                    btn.setBackgroundColor(Color.DKGRAY);
                     break ;
             }
-            reset_circle();
+             GMap_Manager.Change_Color();
+
+
         }
     } ;
     public void onMapMarker(LatLng latLng) {
@@ -104,6 +121,7 @@ public class Fr_R_G_Map extends Fragment implements OnMapReadyCallback {
     }
     public void reset_circle()
     {
+        //GMap_Manager.user_hash.
         for (Circle circle : GMap_Manager.mylist) {
             circle.remove();
         }
@@ -111,14 +129,11 @@ public class Fr_R_G_Map extends Fragment implements OnMapReadyCallback {
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        //LatLng position = new LatLng(location.getLatitude(),location.getLongitude());
         gMap = googleMap;
-        //gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-        googleMap.addMarker(new MarkerOptions().position(latLng).draggable(false));
-        //CircleOptions circleOptions=new CircleOptions().center(latLng).radius(10000);
-        //Circle circle=googleMap.addCircle(circleOptions);
-        googleMap.addCircle(new CircleOptions().center(latLng).radius(100).strokeColor(Color.RED).fillColor(Color.RED));
+        //googleMap.addMarker(new MarkerOptions().position(latLng).draggable(false));
+
+
         if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -127,9 +142,59 @@ public class Fr_R_G_Map extends Fragment implements OnMapReadyCallback {
             return;
         }
         googleMap.setMyLocationEnabled(true);
-        //mGoogleMap.setMyLocationEnabled(true);
+        googleMap.setOnMarkerClickListener(this);
+        googleMap.setOnCircleClickListener(this);
+        googleMap.setOnMapClickListener(this);
+        gMap.getProjection().getVisibleRegion();
+    }
 
-        //googleMap.addCircle(new CircleOptions().center(latLng).radius(10000));
-        //gMap.addCircle(new CircleOptions().center(ar.latLng).radius(1000000));
+
+
+
+
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        for(int i=0;i<GMap_Manager.user_array.size();i++)
+        {
+            //String s=marker.getTitle().split(",")[1];
+            //GMap_Manager.user_array.get(Integer.parseInt(s));
+
+            if((GMap_Manager.user_array.get(i).marker.equals(marker)))
+            {
+                GMap_Manager.user_array.get(i);
+                Air_Data air=GMap_Manager.user_array.get(i).air;
+
+                String data="co "+String.valueOf(air.co)+" so2 "+String.valueOf(air.so2)+" o3 "+String.valueOf(air.o3)+
+                        " pm2_5 "+String.valueOf(air.pm2_5)+" no2 "+String.valueOf(air.no2);
+                marker.setSnippet(data);
+                //Toast.makeText(getActivity().getApplicationContext(),data,Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
+        return false;
+    }
+
+    @Override
+    public void onCircleClick(Circle circle) {
+        for(int i=0;i<GMap_Manager.user_array.size();i++)
+        {
+            if(circle.equals(GMap_Manager.user_array.get(i).circle))
+            {
+                GMap_Manager.user_array.get(i);
+                Air_Data air=GMap_Manager.user_array.get(i).air;
+                String data="co "+String.valueOf(air.co)+" so2 "+String.valueOf(air.so2)+" o3 "+String.valueOf(air.o3)+
+                        " pm2_5 "+String.valueOf(air.pm2_5)+" no2 "+String.valueOf(air.no2);
+                GMap_Manager.user_array.get(i).marker.setSnippet(data);
+                //Toast.makeText(getActivity().getApplicationContext(),data,Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        //Toast.makeText(getActivity().getApplicationContext(),String.valueOf(latLng.latitude)+String.valueOf(latLng.longitude),Toast.LENGTH_SHORT).show();
+        Log.d("lalng",String.valueOf(latLng.latitude)+String.valueOf(latLng.longitude));
     }
 }
