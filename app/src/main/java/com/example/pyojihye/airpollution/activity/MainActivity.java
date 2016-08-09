@@ -28,6 +28,9 @@ import P_Fragment.Fr_View_pager;
 import P_Manager.Gmap_Manager;
 import P_Service.Air_Fake_Service;
 
+/**
+ * Created by PYOJIHYE on 2016-08-05.
+ */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     GoogleMap gmap;

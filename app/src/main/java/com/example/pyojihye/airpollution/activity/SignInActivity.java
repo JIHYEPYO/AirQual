@@ -11,6 +11,9 @@ import android.widget.Toast;
 import com.example.pyojihye.airpollution.HttpConnection;
 import com.example.pyojihye.airpollution.R;
 
+/**
+ * Created by PYOJIHYE on 2016-07-20.
+ */
 public class SignInActivity extends AppCompatActivity {
 
     @Override

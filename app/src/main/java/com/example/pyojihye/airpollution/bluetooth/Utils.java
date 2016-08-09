@@ -8,7 +8,9 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Log;
 
-
+/**
+ * Created by PYOJIHYE on 2016-08-05.
+ */
 public class Utils {
 
     public static void log(String message) {

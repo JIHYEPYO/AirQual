@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Created by PYOJIHYE on 2016-08-05.
+ */
 public class BluetoothUtils {
     private static final String TAG = "BluetoothUtils";
     private static final boolean D = true;
