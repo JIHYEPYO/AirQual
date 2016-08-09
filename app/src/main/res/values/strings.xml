@@ -22,12 +22,6 @@
     <string name="button_send">Send</string>
     <string name="button_scan">Search for devices...</string>
 
-    <string name="not_connected">Not Connected.</string>
-    <string name="title_connecting">Connecting...</string>
-    <string name="title_connected_to">Connected</string>
-    <string name="title_not_connected">Not Connected</string>
-
-    <string name="secure_connect">Secure Connect - (Secure 모드)</string>
     <string name="discoverable">Make Discoverable</string>
 
 </resources>

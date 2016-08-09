@@ -1,4 +1,4 @@
-package P_Manager;
+package com.example.pyojihye.airpollution.P_Manager;
 
 import android.Manifest;
 import android.content.Context;

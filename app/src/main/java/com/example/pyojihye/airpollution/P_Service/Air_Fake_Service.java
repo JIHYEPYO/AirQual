@@ -1,4 +1,4 @@
-package P_Service;
+package com.example.pyojihye.airpollution.P_Service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -10,7 +10,7 @@ import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import P_Data.Air_Data;
+import com.example.pyojihye.airpollution.P_Data.Air_Data;
 
 /**
  *

@@ -22,7 +22,7 @@ public class IntroActivity extends Activity {
         h.postDelayed(irun,2000);
     }
 
-    Runnable irun=new Runnable(){
+    Runnable irun = new Runnable(){
         public void run(){
         Intent i=new Intent(IntroActivity.this,SignInActivity.class);
         startActivity(i);
@@ -30,6 +30,7 @@ public class IntroActivity extends Activity {
         overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
         }
     };
+
     @Override
     public void onBackPressed(){
         super.onBackPressed();

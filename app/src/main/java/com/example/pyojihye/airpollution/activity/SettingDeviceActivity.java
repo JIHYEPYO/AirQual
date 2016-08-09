@@ -20,11 +20,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pyojihye.airpollution.P_Utils.Util_STATUS;
 import com.example.pyojihye.airpollution.R;
 import com.example.pyojihye.airpollution.bluetooth.BluetoothChatService;
 import com.example.pyojihye.airpollution.bluetooth.DeviceConnector;
 import com.example.pyojihye.airpollution.bluetooth.DeviceData;
-import com.example.pyojihye.airpollution.bluetooth.Utils;
 
 import java.util.Set;
 
@@ -49,10 +49,8 @@ public class SettingDeviceActivity extends AppCompatActivity {
     private Set<BluetoothDevice> pairedDevices;
     private ArrayAdapter<String> BTArrayAdapter;
     private LocationManager locationManager;
-    private BluetoothChatService mChatService = null;
     private String mConnectedDeviceName = null;
     private static DeviceConnector connector;
-
 
     public TextView textViewUDOOName;
     public TextView textViewUDOOMac;
@@ -135,59 +133,47 @@ public class SettingDeviceActivity extends AppCompatActivity {
 
     }
 
-    private final void setStatus(int resId) {
-        textViewUDOOName.setText(resId);
-    }
-
-    private final void setStatus(CharSequence subTitle) {
-        textViewUDOOMac.setText(subTitle);
-    }
-
-
     // The Handler that gets information back from the BluetoothChatService
     private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MESSAGE_STATE_CHANGE:
-                    switch (msg.arg1) {
-                        case BluetoothChatService.STATE_CONNECTED:
-                            setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
-                            setStatus(mConnectedDeviceName);
-                            BTArrayAdapter.clear();
-                            break;
-                        case BluetoothChatService.STATE_CONNECTING:
-                            setStatus(R.string.title_connecting);
-                            imageViewUdoo.setImageResource(R.drawable.udoo);
-                            textViewUDOOMac.setText(DeviceListActivity.macaddress);
-                            break;
-                        case BluetoothChatService.STATE_LISTEN:
-                        case BluetoothChatService.STATE_NONE:
-                            setStatus(R.string.title_not_connected);
-                            break;
-                    }
-                    break;
-                case MESSAGE_WRITE:
-                    byte[] writeBuf = (byte[]) msg.obj;
-                    // construct a string from the buffer
-                    String writeMessage = new String(writeBuf);
-                    BTArrayAdapter.add("Me:  " + writeMessage);
-                    break;
-                case MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
-                    // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    BTArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
-                    break;
-                case MESSAGE_DEVICE_NAME:
-                    // save the connected device's name
-                    mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
-                    Toast.makeText(getApplicationContext(), "Connected to " + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
-                    break;
-                case MESSAGE_TOAST:
-                    Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),Toast.LENGTH_SHORT).show();
-                    break;
-            }
+        switch (msg.what) {
+            case MESSAGE_STATE_CHANGE:
+                switch (msg.arg1) {
+                    case BluetoothChatService.STATE_CONNECTED:
+                        BTArrayAdapter.clear();
+                        break;
+                    case BluetoothChatService.STATE_CONNECTING:
+                        textViewUDOOName.setText(Util_STATUS.UdooName);
+                        imageViewUdoo.setImageResource(R.drawable.udoo);
+                        textViewUDOOMac.setText(Util_STATUS.UdooMac);
+                        break;
+                    case BluetoothChatService.STATE_LISTEN:
+                    case BluetoothChatService.STATE_NONE:
+                        break;
+                }
+                break;
+            case MESSAGE_WRITE:
+                byte[] writeBuf = (byte[]) msg.obj;
+                // construct a string from the buffer
+                String writeMessage = new String(writeBuf);
+                BTArrayAdapter.add("Me:  " + writeMessage);
+                break;
+            case MESSAGE_READ:
+                byte[] readBuf = (byte[]) msg.obj;
+                // construct a string from the valid bytes in the buffer
+                String readMessage = new String(readBuf, 0, msg.arg1);
+                BTArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
+                break;
+            case MESSAGE_DEVICE_NAME:
+                // save the connected device's name
+                mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
+                Toast.makeText(getApplicationContext(), "Connected to " + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
+                break;
+            case MESSAGE_TOAST:
+                Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),Toast.LENGTH_SHORT).show();
+                break;
+        }
         }
     };
 
@@ -224,7 +210,6 @@ public class SettingDeviceActivity extends AppCompatActivity {
             connector = new DeviceConnector(data, mHandler);
             connector.connect();
         } catch (IllegalArgumentException e) {
-            Utils.log("setupConnector failed: " + e.getMessage());
         }
     }
 
@@ -233,7 +218,7 @@ public class SettingDeviceActivity extends AppCompatActivity {
             connector.stop();
             connector = null;
             textViewUDOOName.setText("UDOO Board");
-            DeviceListActivity.macaddress="NOT CONNECTED";
+            textViewUDOOMac.setText("NOT CONNECTED");
             imageViewUdoo.setImageResource(R.drawable.udoo0);
         }
     }

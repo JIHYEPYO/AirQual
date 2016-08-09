@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -37,7 +36,7 @@ public class BluetoothChatService {
     public static final int STATE_CONNECTING = 2;
     public static final int STATE_CONNECTED = 3;
 
-    public BluetoothChatService(Context context, Handler handler) {
+    public BluetoothChatService(Handler handler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mHandler = handler;
@@ -46,10 +45,6 @@ public class BluetoothChatService {
     private synchronized void setState(int state) {
         mState = state;
         mHandler.obtainMessage(SettingDeviceActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
-    }
-
-    public synchronized int getState() {
-        return mState;
     }
 
     public synchronized void start() {
@@ -74,26 +69,6 @@ public class BluetoothChatService {
             mInsecureAcceptThread = new AcceptThread(false);
             mInsecureAcceptThread.start();
         }
-    }
-
-
-    public synchronized void connect(BluetoothDevice device, boolean secure) {
-
-        if (mState == STATE_CONNECTING) {
-            if (mConnectThread != null) {
-                mConnectThread.cancel();
-                mConnectThread = null;
-            }
-        }
-
-        if (mConnectedThread != null) {
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
-
-        mConnectThread = new ConnectThread(device, secure);
-        mConnectThread.start();
-        setState(STATE_CONNECTING);
     }
 
     public synchronized void connected(BluetoothSocket socket, BluetoothDevice device, final String socketType) {
@@ -127,41 +102,6 @@ public class BluetoothChatService {
         mHandler.sendMessage(msg);
 
         setState(STATE_CONNECTED);
-    }
-
-    public synchronized void stop() {
-
-        if (mConnectThread != null) {
-            mConnectThread.cancel();
-            mConnectThread = null;
-        }
-
-        if (mConnectedThread != null) {
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
-
-        if (mSecureAcceptThread != null) {
-            mSecureAcceptThread.cancel();
-            mSecureAcceptThread = null;
-        }
-
-        if (mInsecureAcceptThread != null) {
-            mInsecureAcceptThread.cancel();
-            mInsecureAcceptThread = null;
-        }
-        setState(STATE_NONE);
-    }
-
-    public void write(byte[] out) {
-
-        ConnectedThread r;
-
-        synchronized (this) {
-            if (mState != STATE_CONNECTED) return;
-            r = mConnectedThread;
-        }
-        r.write(out);
     }
 
     private void connectionFailed() {
@@ -328,14 +268,6 @@ public class BluetoothChatService {
                     BluetoothChatService.this.start();
                     break;
                 }
-            }
-        }
-
-        public void write(byte[] buffer) {
-            try {
-                mmOutStream.write(buffer);
-                mHandler.obtainMessage(SettingDeviceActivity.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
-            } catch (IOException e) {
             }
         }
 

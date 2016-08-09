@@ -80,7 +80,6 @@ public class DeviceConnector {
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
-
         setState(STATE_NONE);
     }
 
@@ -119,19 +118,6 @@ public class DeviceConnector {
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
-    }
-
-    public void write(byte[] data) {
-        ConnectedThread r;
-        // Synchronize a copy of the ConnectedThread
-        synchronized (this) {
-            if (mState != STATE_CONNECTED) return;
-            r = mConnectedThread;
-        }
-
-        // Perform the write unsynchronized
-        if (data.length == 1) r.write(data[0]);
-        else r.writeData(data);
     }
 
     private void connectionFailed() {
@@ -175,7 +161,6 @@ public class DeviceConnector {
                 connectionFailed();
                 return;
             }
-
             // Make a connection to the BluetoothSocket
             try {
                 // This is a blocking call and will only return on a
@@ -191,12 +176,10 @@ public class DeviceConnector {
                 connectionFailed();
                 return;
             }
-
             // Reset the ConnectThread because we're done
             synchronized (DeviceConnector.this) {
                 mConnectThread = null;
             }
-
             // Start the connected thread
             connected(mmSocket);
         }
@@ -264,32 +247,6 @@ public class DeviceConnector {
                     connectionLost();
                     break;
                 }
-            }
-        }
-
-        public void writeData(byte[] chunk) {
-
-            try {
-                mmOutStream.write(chunk);
-                mmOutStream.flush();
-                // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(SettingDeviceActivity.MESSAGE_WRITE, -1, -1, chunk).sendToTarget();
-            } catch (IOException e) {
-                if (D) Log.e(TAG, "Exception during write", e);
-            }
-        }
-
-        public void write(byte command) {
-            byte[] buffer = new byte[1];
-            buffer[0] = command;
-
-            try {
-                mmOutStream.write(buffer);
-
-                // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(SettingDeviceActivity.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
-            } catch (IOException e) {
-                if (D) Log.e(TAG, "Exception during write", e);
             }
         }
 

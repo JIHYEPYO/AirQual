@@ -21,7 +21,8 @@ public class DeviceData {
         address = device.getAddress();
         bondState = device.getBondState();
 
-        if (name == null || name.isEmpty()) name = emptyName;
+        if (name == null || name.isEmpty())
+            name = emptyName;
         deviceClass = device.getBluetoothClass().getDeviceClass();
         majorDeviceClass = device.getBluetoothClass().getMajorDeviceClass();
         uuids = BluetoothUtils.getDeviceUuids(device);
@@ -37,25 +38,5 @@ public class DeviceData {
 
     public String getAddress() {
         return address;
-    }
-
-    public int getDeviceClass() {
-        return deviceClass;
-    }
-
-    public int getMajorDeviceClass() {
-        return majorDeviceClass;
-    }
-
-    public void setBondState(int state) {
-        bondState = state;
-    }
-
-    public ArrayList<ParcelUuid> getUuids() {
-        return uuids;
-    }
-
-    public int getBondState() {
-        return bondState;
     }
 }

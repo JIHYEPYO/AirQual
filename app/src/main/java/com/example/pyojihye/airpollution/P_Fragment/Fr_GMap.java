@@ -1,4 +1,4 @@
-package P_Fragment;
+package com.example.pyojihye.airpollution.P_Fragment;
 
 import android.Manifest;
 import android.app.Fragment;

@@ -1,4 +1,4 @@
-package P_Adapter;
+package com.example.pyojihye.airpollution.P_Adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -13,7 +13,7 @@ import com.example.pyojihye.airpollution.R;
 
 import java.util.ArrayList;
 
-import P_Data.ListViewItem;
+import com.example.pyojihye.airpollution.P_Data.ListViewItem;
 
 /**
  * Created by user on 2016-07-25.

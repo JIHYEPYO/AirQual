@@ -1,4 +1,4 @@
-package P_Adapter;
+package com.example.pyojihye.airpollution.P_Adapter;
 
 import android.content.Context;
 import android.os.Handler;
@@ -11,8 +11,8 @@ import android.widget.ListView;
 
 import com.example.pyojihye.airpollution.R;
 
-import P_Manager.Realchart_Manager;
-import P_Manager.Realtime_Manager;
+import com.example.pyojihye.airpollution.P_Manager.Realchart_Manager;
+import com.example.pyojihye.airpollution.P_Manager.Realtime_Manager;
 
 
 /**

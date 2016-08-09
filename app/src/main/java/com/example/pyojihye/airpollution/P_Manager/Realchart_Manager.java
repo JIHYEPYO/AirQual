@@ -1,4 +1,4 @@
-package P_Manager;
+package com.example.pyojihye.airpollution.P_Manager;
 
 import android.graphics.Color;
 import android.view.View;
@@ -17,7 +17,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 
-import P_Data.Air_Data;
+import com.example.pyojihye.airpollution.P_Data.Air_Data;
 
 /**
  * Created by user on 2016-07-25.
