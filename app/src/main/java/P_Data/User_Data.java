@@ -14,14 +14,14 @@ public class User_Data {
 
     //유저 아이디 air data,위치 정도,마커?
     public Air_Data air;
-    public LatLng latLng;
-    public String id;
-    public Circle circle;
-    public Marker marker;
-    public boolean check=false;
-    public ArrayList<Air_Data> user_air;
-    public ArrayList<Hashtable<Integer,String>> avg_array;
-    public ArrayList<Hashtable<Integer,String>> aqi_array;
+    public LatLng latLng; //user lat lang
+    public String id; //user id
+    public Circle circle; //user circle
+    public Marker marker; //user marker
+    public boolean check=false; //user connection check
+    public ArrayList<Air_Data> user_air; //user save 10 air data
+    public ArrayList<Hashtable<Integer,String>> avg_array; // avg
+    public ArrayList<Hashtable<Integer,String>> aqi_array; //aqi
     //user data가 왔는지 안왔는지 체크
     //Marker marker;
     public User_Data(String id,Air_Data air,LatLng latLng) {

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.pyojihye.airpollution.HttpConnection;
 import com.example.pyojihye.airpollution.R;
 import com.example.pyojihye.airpollution.bluetooth.BluetoothChatService;
 import com.example.pyojihye.airpollution.bluetooth.DeviceConnector;
@@ -70,7 +71,7 @@ public class SettingDeviceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTitle("Setting Device");
         setContentView(R.layout.activity_setting_device);
-
+        //BTArrayAdapter
         textViewUDOOName = (TextView) findViewById(R.id.TextViewUDOO);
         textViewUDOOMac = (TextView) findViewById(R.id.TextViewUDOOMac);
         imageViewUdoo=(ImageView) findViewById(R.id.imageViewUdoo);
@@ -175,7 +176,7 @@ public class SettingDeviceActivity extends AppCompatActivity {
                         case BluetoothChatService.STATE_CONNECTED:
                             setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
                             setStatus(mConnectedDeviceName);
-                            BTArrayAdapter.clear();
+                            //BTArrayAdapter.clear();
                             break;
                         case BluetoothChatService.STATE_CONNECTING:
                             setStatus(R.string.title_connecting);
@@ -192,13 +193,13 @@ public class SettingDeviceActivity extends AppCompatActivity {
                     byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer
                     String writeMessage = new String(writeBuf);
-                    BTArrayAdapter.add("Me:  " + writeMessage);
+                    //BTArrayAdapter.add("Me:  " + writeMessage);
                     break;
                 case MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
-                    BTArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
+                    //BTArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
                     break;
                 case MESSAGE_DEVICE_NAME:
                     // save the connected device's name
@@ -219,8 +220,21 @@ public class SettingDeviceActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK)
                 {
                     String address = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+                    /*
+                     {
+                    "type":"app",
+                    "userID":"11",
+                    "request":0,
+                    "deviceTYPE":"0",
+                    "deviceMAC":"x'FFFFFFFFFF12'"
+                    }
+                     */
+                    Util_STATUS.HTTP_CONNECT_KIND=2; //2 = REGISTER DEVICE
+                    HttpConnection httpConnectionRegDevice = new HttpConnection(this,getApplicationContext());
 
-                    //이타이밍에 HTTP CONNECTION DEVICE REGISTER 호출
+                    httpConnectionRegDevice.execute(  this.getSharedPreferences("MAC",0).getString("userID",""),address);// user id , address
+                    //1.1.1. {"type":"app","deviceID":"000","request":"0"}
+                    //httpConnectionSignUp.execute(email,password,confirmPassword,firstName,lastName);
                     switch (Util_STATUS.SELECT_BLUETOOTH) //0 UDOO 1 HEART
                     {
                         case 0:
@@ -269,7 +283,7 @@ public class SettingDeviceActivity extends AppCompatActivity {
         try {
             String emptyName = getString(R.string.empty_device_name);
             DeviceData data = new DeviceData(connectedDevice, emptyName);
-            connector = new DeviceConnector(data, mHandler);
+            connector = new DeviceConnector(data, mHandler,this);
             connector.connect();
         } catch (IllegalArgumentException e) {
             Utils.log("setupConnector failed: " + e.getMessage());

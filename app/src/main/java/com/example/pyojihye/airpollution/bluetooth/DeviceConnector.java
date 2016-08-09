@@ -16,6 +16,7 @@
 
 package com.example.pyojihye.airpollution.bluetooth;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -24,12 +25,17 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.example.pyojihye.airpollution.HttpConnection;
 import com.example.pyojihye.airpollution.activity.SettingDeviceActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import P_Data.Util_STATUS;
 import P_Manager.Bluetooth_Manager;
 
 
@@ -50,15 +56,17 @@ public class DeviceConnector {
     private ConnectedThread mConnectedThread;
     private final Handler mHandler;
     private final String deviceName;
+    private Activity activity;
     // ==========================================================================
 
 
-    public DeviceConnector(DeviceData deviceData, Handler handler) {
+    public DeviceConnector(DeviceData deviceData, Handler handler, Activity activity) {
         mHandler = handler;
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         connectedDevice = btAdapter.getRemoteDevice(deviceData.getAddress());
         deviceName = (deviceData.getName() == null) ? deviceData.getAddress() : deviceData.getName();
         mState = STATE_NONE;
+        this.activity=activity;
     }
 
     public synchronized void connect() {
@@ -148,8 +156,8 @@ public class DeviceConnector {
         }
 
         // Perform the write unsynchronized
-        if (data.length == 1) r.write(data[0]);
-        else r.writeData(data);
+        //if (data.length == 1) r.write(data[0]);
+        //else r.writeData(data);
     }
 
     private void connectionFailed() {
@@ -260,24 +268,95 @@ public class DeviceConnector {
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
             /*write 메세지*/
-            writeData("start".getBytes());
-        }
 
+        }
+        int count=0;
         public void run() {
             if (D) Log.i(TAG, "ConnectedThread run");
-            byte[] buffer = new byte[512];
+            //이타이밍에 httpconnection 요청
+            HttpConnection httpConnectionreqconn =new HttpConnection(activity,activity.getApplicationContext());
+            //1.1.1. "type":"app","deviceID":"000","request":"0"
+            //deviceId만 보내면됨 util.~~~ 3으로 변경
+            Util_STATUS.HTTP_CONNECT_KIND=3;
+            httpConnectionreqconn.execute(activity.getSharedPreferences("MAC",0).getString("deviceID",""));
+            //pref=getSharedPreferences("MAC",0);
+            byte[] buffer = new byte[1024];
             int bytes;
             StringBuilder readMessage = new StringBuilder();
+            JSONObject jsonObject=new JSONObject();
+            try {
+                    jsonObject.put("req","start");
+                    jsonObject.put("time",System.currentTimeMillis());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            writeData(jsonObject.toString().getBytes());
+            //writeData("start".getBytes()); //send to message
             while (true) {
                 try {
                     bytes = mmInStream.read(buffer);
+                    String readed;
 
-                    String readed = new String(buffer, 0, bytes);
-                    //readMessage.append(readed);
-                    Bundle bundle=new Bundle();
-                    bundle.putString("data",readed);
+                    if(Util_STATUS.BLUETOOTH_RECEIVCE!=0) //NOT READY가 아니면 1 OR 2
+                    {
 
-                    Bluetooth_Manager.getInstance().Set_Data(bundle);
+                        readed = new String(buffer, 0, bytes);
+                        JSONObject json = new JSONObject(readed);
+
+                        if(json.getString("res")=="CSV")
+                        {
+                            Util_STATUS.BLUETOOTH_RECEIVCE=2;
+                        }
+                        else if(Util_STATUS.BLUETOOTH_RECEIVCE==1) { //JSON
+                            //json으로 변환되어있음
+                            //readMessage.append(readed);
+                            //여기서 바로 http로 쏨 real time data
+
+                            Util_STATUS.HTTP_CONNECT_KIND=6; //input real data
+                            HttpConnection httpConnectionreal=new HttpConnection(activity,activity.getApplicationContext());
+                            httpConnectionreal.execute(json.toString());
+
+
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString("data", readed);
+
+                            Bluetooth_Manager.getInstance().Set_Data(bundle);
+
+                        }
+                        else if(Util_STATUS.BLUETOOTH_RECEIVCE==2) //CSV
+                        {
+                            //csv면 버퍼를 한번더읽음
+                            bytes = mmInStream.read(buffer);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("data", readed);
+
+                            Bluetooth_Manager.getInstance().Set_Data(bundle);
+                            Util_STATUS.BLUETOOTH_RECEIVCE=1;
+
+                        }
+                    }
+
+                    if(Util_STATUS.BLUETOOTH_RECEIVCE==0)
+                    {
+                        readed= new String(buffer, 0, bytes);
+                        JSONObject json = new JSONObject(readed); //convert to json
+                        if(json.getString("res")=="RT")
+                        {
+                            Util_STATUS.BLUETOOTH_RECEIVCE=1; //GET JSON
+                            json=new JSONObject();
+                            json.put("req","RT");
+                            writeData(json.toString().getBytes());
+
+                            //writeData(.getBytes());
+                        }
+
+                    }
+                    //BLUETOOTH_RECEIVCE=false;
+                    // ready to receive bluetooth data
+                    //   public static int BLUETOOTH_RECEIVCE=0; //ready to receive bluetooth data
+                    //0 not ready 1 json 2 csv
+
                     /*
                     if (readed.contains("\n")) {
                         mHandler.obtainMessage(SettingDeviceActivity.MESSAGE_READ, bytes, -1, readMessage.toString()).sendToTarget();
@@ -288,6 +367,8 @@ public class DeviceConnector {
                     if (D) Log.e(TAG, "disconnected", e);
                     connectionLost();
                     break;
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }

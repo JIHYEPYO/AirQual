@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.example.pyojihye.airpollution.HttpConnection;
 import com.example.pyojihye.airpollution.R;
 
+import P_Data.Util_STATUS;
+
 public class SignInActivity extends AppCompatActivity {
 
     @Override
@@ -31,6 +33,8 @@ public class SignInActivity extends AppCompatActivity {
                 if (email.equals("") || password.equals("")) {
                     Toast.makeText(getApplicationContext(), "Please fill in all information", Toast.LENGTH_LONG).show();
                 } else {
+
+                    Util_STATUS.HTTP_CONNECT_KIND=0;
                     HttpConnection httpConnectionSignIn = new HttpConnection(SignInActivity.this, getApplicationContext());
                     httpConnectionSignIn.execute(email,password);
                 }

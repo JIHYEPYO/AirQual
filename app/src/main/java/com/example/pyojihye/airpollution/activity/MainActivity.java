@@ -25,6 +25,8 @@ import com.example.pyojihye.airpollution.bluetooth.DeviceConnector;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import P_Adapter.History_Adapter;
@@ -32,6 +34,7 @@ import P_Adapter.Pager_Adapter;
 import P_Data.AQI_Data;
 import P_Data.Air_Data;
 import P_Data.DBHelper;
+import P_Data.Util_STATUS;
 import P_Fragment.Fr_H_G_Map;
 import P_Fragment.Fr_Historychart_pager;
 import P_Fragment.Fr_R_G_Map;
@@ -75,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Bluetooth_Manager bluetooth_manager;
 
 
+    private static MainActivity instance;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,8 +98,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         bluetooth_manager=new Bluetooth_Manager(bHandler);
         init();
+        instance = this;
     }
-
+    public static MainActivity getInstance() {
+        return instance;
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -105,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
     public void init() {
-
+        System.currentTimeMillis();
         gps_manager = new Gps_Manager(getApplicationContext());
 
         //
@@ -291,14 +299,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public void handleMessage(Message msg) {
+            //블루투스에서 들어온 데이터
 
-            switch (msg.what)
+            if(Util_STATUS.BLUETOOTH_RECEIVCE==1) //JSON
             {
-                case 0:
-                {
-                    break;
-                }
+                //JSONObject jsonObject=(JSONObject)msg.getData("data");
+                JSONObject jsonObject=(JSONObject)msg.getData().get("data");
+
             }
+            else if(Util_STATUS.BLUETOOTH_RECEIVCE==2) //CSV
+            {
+
+            }
+            //msg.getData().get
+            /*String dd=msg.getData().getString("data");
+            String [] sensor_data=dd.split(",");
+            Air_Data airData=new Air_Data(Integer.parseInt(sensor_data[0]),Integer.parseInt(sensor_data[1]),
+                    Integer.parseInt(sensor_data[2]),Integer.parseInt(sensor_data[3]),Integer.parseInt(sensor_data[4]),
+                    Integer.parseInt(sensor_data[4]),Integer.parseInt(sensor_data[4]));
+            if(AIR_V_CONDITION) {
+                p_adapter.rm.Set_realtime(airData);
+
+                p_adapter.rcm.Set_Realchart2(airData);
+            }
+            else if(!AIR_V_CONDITION)
+            {
+
+            }*/
+            /*
+            Util_STATUS.BLUETOOTH_RECEIVCE==1 //json
+            Util_STATUS.BLUETOOTH_RECEIVCE==2 //csv
+            */
+
         }
     };
     @SuppressWarnings("StatementWithEmptyBody")

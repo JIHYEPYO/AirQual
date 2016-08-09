@@ -27,7 +27,13 @@ public class Bluetooth_Manager {
     {
         Message msg=new Message();
         msg.setData(bundle);
-        mHandler.sendMessage(msg);
+        if(mHandler!=null)
+        {
+            mHandler.sendMessage(msg);
+
+        }
+
+        //
     }
     public static void Get_Data(String string)
     {

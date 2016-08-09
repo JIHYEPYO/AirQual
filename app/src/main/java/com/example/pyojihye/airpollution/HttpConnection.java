@@ -3,6 +3,7 @@ package com.example.pyojihye.airpollution;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.widget.Toast;
@@ -24,6 +25,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import P_Data.Util_STATUS;
+
 /**
  * Created by PYOJIHYE on 2016-08-04.
  */
@@ -35,6 +38,11 @@ public class HttpConnection extends AsyncTask<String, String, String> {
     HttpURLConnection conn;
     URL url = null;
     Handler hHnadler;
+    SharedPreferences pref;
+
+    //0 DEFAULT 1 SIGN IN& SIGN UP  2 DEVICE REGISTER // 3 CONNECTION REQUEST
+    //4 RESPONSE HISTORY DATA 5 GET REAL TIME USER DATA
+
     public HttpConnection(Activity activity, Context connectContext) {
         this.activity=activity;
         this.connectContext=connectContext;
@@ -45,11 +53,58 @@ public class HttpConnection extends AsyncTask<String, String, String> {
     protected String doInBackground(String... str) {
         try{
             // Enter URL address where your php file resides
+            //0 sign in 1 SIGN up 2 DEVICE REGISTER  // 3 CONNECTION REQUEST
+            //4 RESPONSE HISTORY DATA 5 GET REAL TIME USER DATA
+
+            //set url
+            switch (Util_STATUS.HTTP_CONNECT_KIND)
+            {
+                case 0: //sign in
+                {
+                    url = new URL("http://teama-iot.calit2.net/slim/recieveData.php//sign-in");
+                    break;
+                }
+                case 1: //sign up
+                {
+                    url = new URL("http://teama-iot.calit2.net/slim/recieveData.php//sign-up");
+                    break;
+                }
+                case 2: ///device register
+                {
+                    url = new URL("http://teama-iot.calit2.net/slim/recieveData.php/device_connect");
+                    break;
+                }
+                case 3: //connection request
+                {
+                    break;
+                }
+                case 4: //response histroy data
+                {
+                    break;
+                }
+                case 5: //get real time user data
+                {
+                    break;
+                }
+                case 6: //input ar data
+                {
+                    //str[0] json data
+                    break;
+                }
+                case 7: //input hr data
+                {
+                    break;
+                }
+
+
+            }
+
+
             if(str.length<=2){ //signIn
-                url = new URL("http://teama-iot.calit2.net/slim/recieveData.php//sign-in");
-                //url = new URL("http://teama-iot.calit2.net/slim/recieveData.php/device_connect");
+
+                //
             }else{  //signUp
-                url = new URL("http://teama-iot.calit2.net/slim/recieveData.php//sign-up");
+
             }
 
         } catch (MalformedURLException e) {
@@ -82,21 +137,67 @@ public class HttpConnection extends AsyncTask<String, String, String> {
                */
             //1.1.1. {"type":"app","userID"	:"123","request":"0","deviceTYPE":"0","deviceMAC":"11-A1-AA-11-11-A1"}
 
+            switch (Util_STATUS.HTTP_CONNECT_KIND) {
 
-            try{
-                json.put("type","app");
-                json.put("email", str[0]);
-                json.put("pwd", str[1]);
+                case 0: //sign in
+                {
+                    try{
+                            json.put("type","app");
+                            json.put("email", str[0]);
+                            json.put("pwd", str[1]);
 
-                if(str.length>2){
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return "exception";
+                    }
+                    break;
+                }
+                case 1: //sign up
+                {
+                    json.put("type","app");
+                    json.put("email", str[0]);
+                    json.put("pwd", str[1]);
                     json.put("checkpwd", str[2]);
                     json.put("fname", str[3]);
                     json.put("lname", str[4]);
+                    break;
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return "exception";
+                case 2: //device register
+                {
+                    //USER ID 랑 ADDRESS 받음
+                    json.put("type","app");
+                    json.put("userID",str[0]); //userID
+                    json.put("request","0");
+                    if (Util_STATUS.SELECT_BLUETOOTH==0)
+                    {
+                        json.put("deviceTYPE","0");
+                    }
+                    else if(Util_STATUS.SELECT_BLUETOOTH==1)
+                    {
+                        json.put("deviceTYPE","1");
+                    }
+                    String mac="x'";
+                    for(int i=0;i<str[1].split(":").length;i++)
+                    {
+                        mac+=str[1].split(":")[i];
+                    }
+                    mac+="'";
+                    json.put("deviceMAC",mac);
+                    //str[1] //device MAC
+                    //json.put("deviceMAC",)
+                    //json.put("deviceMAC",x)
+                    break;
+                }
+                case 3: //connect request device id 들어옴
+                {
+                    json.put("type","app");
+                    json.put("deviceID",str[0]);
+                    json.put("request","0");
+                    break;
+                }
             }
+
 
             String body = json.toString();
 
@@ -152,6 +253,111 @@ public class HttpConnection extends AsyncTask<String, String, String> {
             JSONObject jsonObject = new JSONObject(result);
             response=jsonObject.getString("response");
 
+            switch (Util_STATUS.HTTP_CONNECT_KIND)
+            {
+
+                case 0: //sign in
+                {
+                    response=jsonObject.getString("response");
+                    switch (response)
+                    {
+                        case "0":
+                            //pref = activity.getSharedPreferences("MAC", 0);
+                            pref=activity.getSharedPreferences("MAC",0);
+                            //pref = MainActivity.getInstance().getSharedPreferences("MAC",0);
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("userID",jsonObject.getString("userID"));
+                            editor.commit();
+                            //editor.putString("UDOOMAC", address);
+                            Toast.makeText(connectContext, "Log-In Success!", Toast.LENGTH_LONG).show();
+                            Intent IntentSettingDevice = new Intent(activity, SettingDeviceActivity.class);
+                            activity.startActivity(IntentSettingDevice);
+                            break;
+                        case "1":
+                            Toast.makeText(connectContext, "No exist in DB", Toast.LENGTH_LONG).show();
+                            break;
+                        case "2":
+                            Toast.makeText(connectContext, "Password is wrong", Toast.LENGTH_LONG).show();
+                            break;
+                        case "3":
+                            Toast.makeText(connectContext, "Lock account.\nPlease check the link in Email\nPlease Go to Web site, Change your Password!", Toast.LENGTH_LONG).show();
+                            break;
+
+                    }
+                    break;
+                }
+                case 1: //sign up
+                {
+                    response=jsonObject.getString("response");
+                    switch (response)
+                    {
+                        case "4":
+                            Toast.makeText(connectContext, "Sign up in with this account", Toast.LENGTH_LONG).show();
+                            break;
+                        case "5":
+                            Toast.makeText(connectContext, "Password must be at least 8 character long", Toast.LENGTH_LONG).show();
+                            break;
+                        case "6":
+                            Toast.makeText(activity, "Sign Up Success!\n Please Check the link in Email.\nActivated your account", Toast.LENGTH_LONG).show();
+                            Intent IntentSignIn = new Intent(activity, SignInActivity.class);
+                            activity.startActivity(IntentSignIn);
+                    }
+                    break;
+                }
+                case 2: ///device register
+                {
+
+                    response=jsonObject.getString("response");
+                    if(response=="0")
+                    {
+                        //pref 안에 디바이스 이름 디바이스 맥 유저 아이디 디바이스 아이디 저장
+                        //{"type":"web","response":0,"deviceID":{"maxID":"5"}}Invalid HTTP status code211
+                        pref=activity.getSharedPreferences("MAC",0);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("deviceID",jsonObject.getString("deviceID"));
+                        editor.commit();
+                        Toast.makeText(activity,"Device register success!",Toast.LENGTH_SHORT).show();
+                    }
+                    else if(response=="1")
+                    {
+                        Toast.makeText(activity,"Device register error!",Toast.LENGTH_SHORT).show();
+                    }
+                        //여기서 디바이스 아이디 저장
+                    //1.1.1. {"type":"web","response":"0","deviceID":1234}
+
+
+                    break;
+                }
+                case 3: //connection request
+                {
+                    //1.1.1. {"type":"web","response":"0","deviceID":1234,"connectionID":1234}//connection request
+
+                    response=jsonObject.getString("response");
+                    if(response=="0") {
+                        pref=activity.getSharedPreferences("MAC",0);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("connectionID",jsonObject.getString("connectionID"));
+                        editor.commit();
+                            Toast.makeText(activity,"Connection request success!",Toast.LENGTH_SHORT).show();
+
+                    }
+                    else if(response=="1")
+                    {
+                    Toast.makeText(activity,"Connection request error!",Toast.LENGTH_SHORT).show();
+                    }
+
+
+                    break;
+                }
+                case 4: //response histroy data
+                {
+                    break;
+                }
+                case 5: //get real time user data
+                {
+                    break;
+                }
+            }
             switch (response) {
                 case "0":
                     Toast.makeText(connectContext, "Log-In Success!", Toast.LENGTH_LONG).show();

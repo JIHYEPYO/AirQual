@@ -9,6 +9,8 @@ import android.widget.Toast;
 import com.example.pyojihye.airpollution.HttpConnection;
 import com.example.pyojihye.airpollution.R;
 
+import P_Data.Util_STATUS;
+
 /**
  * Created by PYOJIHYE on 2016-07-20.
  */
@@ -36,8 +38,9 @@ public class SignUpActivity extends AppCompatActivity {
             if(firstName.equals("") || lastName.equals("") || email.equals("") || password.equals("")) {
                 Toast.makeText(getApplicationContext(), "Please fill in all information", Toast.LENGTH_LONG).show();
                 return;
-            }else{   
+            }else{
                 if(password.equals(confirmPassword)){
+                    Util_STATUS.HTTP_CONNECT_KIND=1;
                     HttpConnection httpConnectionSignUp = new HttpConnection(SignUpActivity.this,getApplicationContext());
                     httpConnectionSignUp.execute(email,password,confirmPassword,firstName,lastName);
                 }else{
