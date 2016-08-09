@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.pyojihye.airpollution.MainActivity;
+import com.example.pyojihye.airpollution.activity.MainActivity;
 import com.example.pyojihye.airpollution.R;
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 

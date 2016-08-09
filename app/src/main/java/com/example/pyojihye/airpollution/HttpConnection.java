@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.example.pyojihye.airpollution.activity.SignInActivity;
+import com.example.pyojihye.airpollution.activity.SettingDeviceActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,7 +44,7 @@ public class HttpConnection extends AsyncTask<String, String, String> {
         try{
             // Enter URL address where your php file resides
             if(str.length<=2){ //signIn
-                url = new URL("http://teama-iot.calit2.net/slim/recieveData.php/rcvJSON2");
+                url = new URL("http://teama-iot.calit2.net/slim/recieveData.php//sign-in");
             }else{  //signUp
                 url = new URL("http://teama-iot.calit2.net/slim/recieveData.php//sign-up");
             }
@@ -137,6 +140,7 @@ public class HttpConnection extends AsyncTask<String, String, String> {
             String response;
             JSONObject jsonObject = new JSONObject(result);
             response=jsonObject.getString("response");
+
             switch (response) {
                 case "0":
                     Toast.makeText(connectContext, "Log-In Success!", Toast.LENGTH_LONG).show();
@@ -144,53 +148,31 @@ public class HttpConnection extends AsyncTask<String, String, String> {
                     activity.startActivity(IntentSettingDevice);
                     break;
                 case "1":
-                    Toast.makeText(connectContext, "No exist in DB", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(connectContext, "No exist in DB", Toast.LENGTH_LONG).show();
                     break;
                 case "2":
-                    Toast.makeText(connectContext, "Password is wrong", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(connectContext, "Password is wrong", Toast.LENGTH_LONG).show();
                     break;
                 case "3":
-                    Toast.makeText(connectContext, "Lock account.\nPlease check the link in Email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(connectContext, "Lock account.\nPlease check the link in Email\nPlease Go to Web site, Change your Password!", Toast.LENGTH_LONG).show();
                     break;
                 case "4":
-                    Toast.makeText(connectContext, "Sign up in with this account", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(connectContext, "Sign up in with this account", Toast.LENGTH_LONG).show();
                     break;
                 case "5":
-                    Toast.makeText(connectContext, "Password must be at least 8 character long", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(connectContext, "Password must be at least 8 character long", Toast.LENGTH_LONG).show();
                     break;
                 case "6":
-                    Toast.makeText(activity, "Sign Up Success!\n Please Check the link in Email. Activated your account", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Sign Up Success!\n Please Check the link in Email.\nActivated your account", Toast.LENGTH_LONG).show();
                     Intent IntentSignIn = new Intent(activity, SignInActivity.class);
                     activity.startActivity(IntentSignIn);
                     break;
                 default:
-                    Toast.makeText(connectContext, "Exception!\nPlease Use Later", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(connectContext, "Exception!\nPlease Use Later", Toast.LENGTH_LONG).show();
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-//        if (result.equalsIgnoreCase("success")) {
-//            Toast.makeText(connectContext, "Success!", Toast.LENGTH_SHORT).show();
-//            Intent IntentSettingDevice = new Intent(connectContext, SettingDeviceActivity.class);
-//            ((Activity) connectContext).startActivity(IntentSettingDevice);
-//
-//        } else if (result.equalsIgnoreCase("fail")) {
-//            Toast.makeText(connectContext,"Failed!", Toast.LENGTH_SHORT).show();
-//
-//        } else if (result.equalsIgnoreCase("exception")) {
-//            Toast.makeText(connectContext,"exception!", Toast.LENGTH_SHORT).show();
-//
-//        }else if (result.equalsIgnoreCase("unsuccessful")){
-//            Toast.makeText(connectContext,"unsuccessful!", Toast.LENGTH_SHORT).show();
-//
-//        }else if(result.equalsIgnoreCase("")){
-//            Toast.makeText(connectContext,"!", Toast.LENGTH_SHORT).show();
-//
-//        }else{
-//            Toast.makeText(connectContext, result, Toast.LENGTH_SHORT).show();
-//        }
-//    }
     }
 }

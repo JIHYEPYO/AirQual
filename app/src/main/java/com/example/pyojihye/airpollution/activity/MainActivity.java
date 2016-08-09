@@ -1,4 +1,4 @@
-package com.example.pyojihye.airpollution;
+package com.example.pyojihye.airpollution.activity;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.pyojihye.airpollution.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CircleOptions;
 
@@ -129,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //String vv=String.valueOf(ar.co)+","+String.valueOf(ar.co2)+","+String.valueOf(ar.no2)+","
              //       +String.valueOf(ar.o3)+","+String.valueOf(ar.so2);
             //Air_Data ar=(Air_Data)msg.getData().getSerializable("data");
-            //Intent serverIntent = new Intent(this, DeviceListActivity.class);
 
 
         }

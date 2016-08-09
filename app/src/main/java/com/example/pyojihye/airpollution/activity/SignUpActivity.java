@@ -1,10 +1,13 @@
-package com.example.pyojihye.airpollution;
+package com.example.pyojihye.airpollution.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.pyojihye.airpollution.HttpConnection;
+import com.example.pyojihye.airpollution.R;
 
 /**
  * Created by PYOJIHYE on 2016-07-20.
