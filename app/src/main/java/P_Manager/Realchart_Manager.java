@@ -386,31 +386,37 @@ public class Realchart_Manager {
                     {
                         case 0:
                         {
-                            data.addEntry(new Entry((float)air.co ,10), i);
+                            data.addEntry(new Entry((float)air.co ,20), i);
                             break;
                         }
 
                         case 1:
                         {
-                            data.addEntry(new Entry((float)air.so2 ,10), i);
+                            data.addEntry(new Entry((float)air.so2 ,20), i);
                             break;
                         }
 
                         case 2:
                         {
-                            data.addEntry(new Entry((float)air.no2 ,10), i);
+                            data.addEntry(new Entry((float)air.no2 ,20), i);
                             break;
                         }
 
                         case 3:
                         {
-                            data.addEntry(new Entry((float)air.o3 ,10), i);
+                            data.addEntry(new Entry((float)air.o3 ,20), i);
                             break;
                         }
 
                         case 4:
                         {
-                            data.addEntry(new Entry((float)air.pm2_5 ,10), i);
+                            data.addEntry(new Entry((float)air.time,20), i);
+                            break;
+                        }
+
+                        case 5:
+                        {
+                            data.addEntry(new Entry((float)air.pm2_5 ,20), i);
                             break;
                         }
 
@@ -450,6 +456,12 @@ public class Realchart_Manager {
                         }
 
                         case 4:
+                        {
+                            data.addEntry(new Entry((float)air.time,set.getEntryCount()), i);
+                            break;
+                        }
+
+                        case 5:
                         {
                             data.addEntry(new Entry((float)air.pm2_5 ,set.getEntryCount()), i);
                             break;

@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import P_Data.Air_Data;
 
@@ -31,7 +32,7 @@ public class Air_Fake_Service extends Service {
         ait.start();
         //버스데이터 나중에 삭제해야함
         Bus_location();
-
+        Date date=new Date();
 
     }
     class Air_data_Thread extends Thread {
@@ -289,6 +290,7 @@ public class Air_Fake_Service extends Service {
             (int)(Math.random()*500),(int)(Math.random()*500),(int)(Math.random()*500),
             (int)(Math.random()*500),(int)(Math.random()*500),new LatLng(32.88179410794101+Math.random(),-117.23402337703594+Math.random()));
         */
+
         latLng=new LatLng(latLng.latitude+0.0001,latLng.longitude+0.0001);
         return new Air_Data((int)(Math.random()*500),(int)(Math.random()*500),
                 (int)(Math.random()*500),(int)(Math.random()*500),(int)(Math.random()*500),

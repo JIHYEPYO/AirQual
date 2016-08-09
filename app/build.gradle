@@ -32,4 +32,5 @@ dependencies {
     compile 'com.github.castorflex.verticalviewpager:library:19.0.1'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     compile 'com.google.android.gms:play-services:9.2.0'
+    compile 'com.google.maps.android:android-maps-utils:0.4+'
 }

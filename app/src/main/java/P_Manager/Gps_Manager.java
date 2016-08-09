@@ -3,6 +3,7 @@ package P_Manager;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -10,6 +11,11 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import P_Data.DBHelper;
 
 /**
  * Created by user on 2016-08-02.
@@ -19,9 +25,12 @@ public class Gps_Manager {
     Location location;
     Context mContext;
     LatLng latLng=null;
-
+    DBHelper helper;
+    SQLiteDatabase db;
 
     public Gps_Manager(Context mContext) {
+        helper=new DBHelper(mContext);
+        db=helper.getWritableDatabase();
         this.mContext = mContext;
         //locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
@@ -40,6 +49,23 @@ public class Gps_Manager {
 
         }
         latLng=new LatLng(location.getLatitude(),location.getLongitude());
+        db.execSQL("INSERT INTO Gps_data (regdate,Lat,Lon) values("+System.currentTimeMillis()/1000+","+latLng.latitude+","+latLng.longitude+");");
+        Gps_data_Thread gdt=new Gps_data_Thread();
+        gdt.start();
+        //  String sql="INSERT INTO Air_data(regdate,CO) values(1234,'12','13','14','15','16');";
+    }
+    class Gps_data_Thread extends Thread {
+        private TimerTask mTask=new TimerTask() {
+            @Override
+            public void run() {
+                db.execSQL("INSERT INTO Gps_data (regdate,Lat,Lon) values("+System.currentTimeMillis()/1000+","+latLng.latitude+","+latLng.longitude+");");
+            }
+        };
+        private Timer mTimer=new Timer( );
+        @Override
+        public void run() {
+            mTimer.schedule(mTask,0,1000);
+        }
     }
     public LatLng get_LatLng()
     {

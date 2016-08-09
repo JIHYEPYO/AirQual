@@ -158,7 +158,7 @@ public class Fr_R_G_Map extends Fragment implements OnMapReadyCallback,GoogleMap
         for(int i=0;i<GMap_Manager.user_array.size();i++)
         {
             //String s=marker.getTitle().split(",")[1];
-            //GMap_Manager.user_array.get(Integer.parseInt(s));
+
 
             if((GMap_Manager.user_array.get(i).marker.equals(marker)))
             {

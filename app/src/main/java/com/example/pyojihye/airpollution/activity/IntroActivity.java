@@ -1,10 +1,12 @@
-package com.example.pyojihye.airpollution;
+package com.example.pyojihye.airpollution.activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
+
+import com.example.pyojihye.airpollution.R;
 
 /**
  * Created by PYOJIHYE on 2016-07-25.
@@ -22,10 +24,10 @@ public class IntroActivity extends Activity {
 
     Runnable irun=new Runnable(){
         public void run(){
-            Intent i=new Intent(IntroActivity.this,SignInActivity.class);
-            startActivity(i);
-            finish();
-            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+        Intent i=new Intent(IntroActivity.this,SignInActivity.class);
+        startActivity(i);
+        finish();
+        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
         }
     };
     @Override

@@ -13,6 +13,10 @@ public class Util_STATUS {
     public static boolean REAL_MAP_STATE=false;
     public static String Chart_Select="CO";
     public static boolean RECEIVE_DATA_STATUS=false;
+    public static boolean HAVE_UDOODeviceID=false;
+    public static boolean HAVE_HEARTDeviceID=false;
+    public static int SELECT_BLUETOOTH=0; //0 UDOO 1 HEART
+
     //public static boolean
 
     public Util_STATUS() {

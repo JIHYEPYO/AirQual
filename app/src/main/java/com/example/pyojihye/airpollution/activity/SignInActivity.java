@@ -1,4 +1,4 @@
-package com.example.pyojihye.airpollution;
+package com.example.pyojihye.airpollution.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.pyojihye.airpollution.HttpConnection;
+import com.example.pyojihye.airpollution.R;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -28,10 +31,8 @@ public class SignInActivity extends AppCompatActivity {
                 if (email.equals("") || password.equals("")) {
                     Toast.makeText(getApplicationContext(), "Please fill in all information", Toast.LENGTH_LONG).show();
                 } else {
-                    //HttpConnection httpConnectionSignIn = new HttpConnection(SignInActivity.this, getApplicationContext());
-                    //httpConnectionSignIn.execute(email,password);
-                    Intent IntentSettingDevice = new Intent(SignInActivity.this, SettingDeviceActivity.class);
-                    SignInActivity.this.startActivity(IntentSettingDevice);
+                    HttpConnection httpConnectionSignIn = new HttpConnection(SignInActivity.this, getApplicationContext());
+                    httpConnectionSignIn.execute(email,password);
                 }
             }
         });

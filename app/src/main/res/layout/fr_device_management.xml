@@ -19,6 +19,7 @@
             <ImageView
                 android:layout_width="70dp"
                 android:layout_height="100dp"
+                android:id="@+id/udoo_img"
                 android:background="@drawable/udoo"/>
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -38,6 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="11-A1-AA-11-11-A1"
+                    android:id="@+id/udoo_mac"
                     android:textSize="20dp"/>
             </LinearLayout>
 
@@ -61,7 +63,9 @@
             <ImageView
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:background="@drawable/heartrate"/>
+                android:background="@drawable/heartrate"
+                android:id="@+id/heart_img"
+                />
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -80,6 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="11-A1-AA-11-11-A1"
+                    android:id="@+id/heart_mac"
                     android:textSize="20dp"/>
             </LinearLayout>
 

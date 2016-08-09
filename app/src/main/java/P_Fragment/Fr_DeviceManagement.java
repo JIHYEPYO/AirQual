@@ -12,9 +12,18 @@ import android.view.ViewGroup;
  */
 public class Fr_DeviceManagement extends Fragment {
 
+    static View view;
+
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
+
+
+
+
 }

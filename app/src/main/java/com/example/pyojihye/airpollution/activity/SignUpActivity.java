@@ -36,7 +36,7 @@ public class SignUpActivity extends AppCompatActivity {
             if(firstName.equals("") || lastName.equals("") || email.equals("") || password.equals("")) {
                 Toast.makeText(getApplicationContext(), "Please fill in all information", Toast.LENGTH_LONG).show();
                 return;
-            }else{
+            }else{   
                 if(password.equals(confirmPassword)){
                     HttpConnection httpConnectionSignUp = new HttpConnection(SignUpActivity.this,getApplicationContext());
                     httpConnectionSignUp.execute(email,password,confirmPassword,firstName,lastName);
