@@ -31,7 +31,7 @@ public class SignInActivity extends AppCompatActivity {
                 String password = editTextPassword.getText().toString();
 
                 if (email.equals("") || password.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Please fill in all information", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Please fill in all information", Toast.LENGTH_SHORT).show();
                 } else {
 
                     Util_STATUS.HTTP_CONNECT_KIND=0;

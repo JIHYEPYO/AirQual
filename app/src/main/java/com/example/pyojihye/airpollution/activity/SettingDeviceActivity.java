@@ -42,7 +42,7 @@ public class SettingDeviceActivity extends AppCompatActivity {
     public static final int MESSAGE_WRITE = 3;
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
-
+    public static final int MESSAGE_CONNECT =6;
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
 
@@ -64,18 +64,30 @@ public class SettingDeviceActivity extends AppCompatActivity {
     public TextView textViewUDOOMac;
     public ImageView imageViewUdoo;
 
+    public TextView textViewHEARTName;
+    public TextView textViewHEARTMac;
+    public ImageView imageViewHEART;
+
+    public Activity activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity=this;
         setTitle("Setting Device");
         setContentView(R.layout.activity_setting_device);
         //BTArrayAdapter
         textViewUDOOName = (TextView) findViewById(R.id.TextViewUDOO);
         textViewUDOOMac = (TextView) findViewById(R.id.TextViewUDOOMac);
         imageViewUdoo=(ImageView) findViewById(R.id.imageViewUdoo);
+        textViewHEARTName = (TextView) findViewById(R.id.TextViewHR);
+        textViewHEARTMac = (TextView) findViewById(R.id.TextViewHRMac);
+        imageViewHEART=(ImageView) findViewById(R.id.imageViewHeart);
         ToggleButton toggleButton=(ToggleButton)findViewById(R.id.toggleButtonUdoo);
+        toggleButton.setChecked(true);
+
         toggleButton.setOnClickListener(onClickListener);
         toggleButton=(ToggleButton)findViewById(R.id.toggleButtonHeart);
+        toggleButton.setChecked(true);
         toggleButton.setOnClickListener(onClickListener);
         myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -86,10 +98,12 @@ public class SettingDeviceActivity extends AppCompatActivity {
             gpsOn();
             blueToothOn();
         }
+
         pref=getSharedPreferences("MAC",0);
         if(pref.getString("HEARTMAC","")!=null)
         {
-
+           // textViewUDOOMac.setText(pref.getString("HEARTMAC",""));
+            textViewHEARTMac.setText(pref.getString("HEARTMAC",""));
         }
         if(pref.getString("UDOOMAC","")!=null)
         {
@@ -110,9 +124,9 @@ public class SettingDeviceActivity extends AppCompatActivity {
         if (!myBluetoothAdapter.isEnabled()) {
             Intent IntentEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(IntentEnable, REQUEST_ENABLE_BT);
-            Toast.makeText(getApplicationContext(), "Bluetooth turned on", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Bluetooth turned on", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getApplicationContext(), "Bluetooth is already on", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Bluetooth is already on", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -152,7 +166,16 @@ public class SettingDeviceActivity extends AppCompatActivity {
     }
 
     public void onImageViewHRClick(View view){
-        Util_STATUS.SELECT_BLUETOOTH=1; //HR
+        Util_STATUS.SELECT_BLUETOOTH=1; //HEART
+
+        if (isConnected()) {
+            stopConnection();
+        }
+        else{
+            Intent serverIntent = new Intent(this, DeviceListActivity.class);
+            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
+        }
+        //HR
     }
 
     private final void setStatus(int resId) {
@@ -178,12 +201,17 @@ public class SettingDeviceActivity extends AppCompatActivity {
                             break;
                         case BluetoothChatService.STATE_CONNECTING:
                             setStatus(R.string.title_connecting);
+                            Toast.makeText(getApplicationContext(),"Connecting",Toast.LENGTH_SHORT).show();
                             imageViewUdoo.setImageResource(R.drawable.udoo);
                             textViewUDOOMac.setText(DeviceListActivity.macaddress);
                             break;
                         case BluetoothChatService.STATE_LISTEN:
                         case BluetoothChatService.STATE_NONE:
                             setStatus(R.string.title_not_connected);
+                            //Toast.makeText(getApplicationContext(),"Socket connection failed",Toast.LENGTH_SHORT).show();
+                            //(ToggleButton)findViewById(R.id.toggleButtonUdoo)
+
+                            ((ToggleButton)findViewById(R.id.toggleButtonUdoo)).setChecked(true);
                             break;
                     }
                     break;
@@ -205,9 +233,42 @@ public class SettingDeviceActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Connected to " + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
                     break;
                 case MESSAGE_TOAST:
-                    Toast.makeText(getApplicationContext(),"Socket connection failed",Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),Toast.LENGTH_SHORT).show();
 
+                    stopConnection();
+                    ((ToggleButton)findViewById(R.id.toggleButtonUdoo)).setEnabled(true);
+                    Toast.makeText(getApplicationContext(),"Socket connection failed",Toast.LENGTH_SHORT).show();
+
+                    Util_STATUS.HTTP_CONNECT_KIND=3;  //http connection
+                    Util_STATUS.REQ_CONNECTION_STATE=1; //0 connect 1 disconnect
+                    HttpConnection httpConnectionreqconn =new HttpConnection(activity,getApplicationContext());
+                    if(Util_STATUS.SELECT_BLUETOOTH==0)
+                    {
+                        httpConnectionreqconn.execute(activity.getSharedPreferences("MAC",0).getString("UDOOdeviceID",""));
+
+                    }else if(Util_STATUS.SELECT_BLUETOOTH==1)
+                    {
+                        httpConnectionreqconn.execute(activity.getSharedPreferences("MAC",0).getString("HEARTdeviceID",""));
+                    }
+
+                    break;
+                case MESSAGE_CONNECT: //Connection ok
+                    ((ToggleButton)findViewById(R.id.toggleButtonUdoo)).setEnabled(true); //커넥션 연결 성공시 true
+                    ((ToggleButton)findViewById(R.id.toggleButtonUdoo)).setChecked(false);
+                    Util_STATUS.HTTP_CONNECT_KIND=3;  //http connection
+                    Util_STATUS.REQ_CONNECTION_STATE=0; //request connection
+
+
+                    /* request to connection*/
+                    httpConnectionreqconn =new HttpConnection(activity,getApplicationContext());
+
+                    if(Util_STATUS.SELECT_BLUETOOTH==0)
+                    {
+                        httpConnectionreqconn.execute(activity.getSharedPreferences("MAC",0).getString("UDOOdeviceID",""));
+
+                    }else if(Util_STATUS.SELECT_BLUETOOTH==1)
+                    {
+                        httpConnectionreqconn.execute(activity.getSharedPreferences("MAC",0).getString("HEARTdeviceID",""));
+                    }
                     break;
             }
         }
@@ -225,6 +286,7 @@ public class SettingDeviceActivity extends AppCompatActivity {
 
                     HttpConnection httpConnectionRegDevice = new HttpConnection(this,getApplicationContext());
                     httpConnectionRegDevice.execute(  this.getSharedPreferences("MAC",0).getString("userID",""),address);// user id , address
+
                     //HttpConnection httpConnectionreqconn =new HttpConnection(this,this.getApplicationContext());
                     //httpConnectionreqconn.execute("7");
                     switch (Util_STATUS.SELECT_BLUETOOTH) //0 UDOO 1 HEART
@@ -236,6 +298,7 @@ public class SettingDeviceActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = pref.edit();
                             editor.putString("UDOOMAC", address);
                             editor.commit();
+
                             textViewUDOOMac.setText(address);
                             break;
                         }
@@ -276,12 +339,9 @@ public class SettingDeviceActivity extends AppCompatActivity {
             String emptyName = getString(R.string.empty_device_name);
             DeviceData data = new DeviceData(connectedDevice, emptyName);
             connector = new DeviceConnector(data, mHandler,this);
+
             connector.connect();
            //connection 요청
-            Util_STATUS.HTTP_CONNECT_KIND=3;  //http connection
-            Util_STATUS.REQ_CONNECTION_STATE=0; //request connection
-            HttpConnection httpConnectionreqconn =new HttpConnection(this,this.getApplicationContext());
-            httpConnectionreqconn.execute(this.getSharedPreferences("MAC",0).getString("deviceID",""));
         } catch (IllegalArgumentException e) {
             Toast.makeText(this,"Bluetooth connection failed",Toast.LENGTH_LONG).show();
 
@@ -290,6 +350,7 @@ public class SettingDeviceActivity extends AppCompatActivity {
 
     private void stopConnection() {
         //stopconnection 요청
+
         if (connector != null) {
             connector.stop();
             connector = null;
@@ -300,16 +361,21 @@ public class SettingDeviceActivity extends AppCompatActivity {
             Util_STATUS.HTTP_CONNECT_KIND=3;  //http connection
             Util_STATUS.REQ_CONNECTION_STATE=1; //request connection
             HttpConnection httpConnectionreqconn =new HttpConnection(this,this.getApplicationContext());
-            if(Util_STATUS.SELECT_BLUETOOTH==0)
+            if(Util_STATUS.SELECT_BLUETOOTH==0) //UDOO
             {
-                httpConnectionreqconn.execute(this.getSharedPreferences("MAC",0).getString("UDOOdeviceID",""));
+                //
+               httpConnectionreqconn.execute(this.getSharedPreferences("MAC",0).getString("UDOOdeviceID",""));
 
-            }else if(Util_STATUS.SELECT_BLUETOOTH==1)
+            }else if(Util_STATUS.SELECT_BLUETOOTH==1) //HEART
             {
-                httpConnectionreqconn.execute(this.getSharedPreferences("MAC",0).getString("HEARTdeviceID",""));
+               // httpConnectionreqconn.execute(this.getSharedPreferences("MAC",0).getString("HEARTdeviceID",""));
 
             }
 
+        }
+        else if(connector==null)
+        {
+            //Toast.makeText(this,"have not connection",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -331,8 +397,18 @@ public class SettingDeviceActivity extends AppCompatActivity {
                         //이름이 해제일떄 연결
                         //이름이 연결일떄 해제
                        // toggleButton.get
-                        BluetoothDevice device = myBluetoothAdapter.getRemoteDevice((pref.getString("UDOOMAC", "")));
-                        setupConnector(device);
+                        if(toggleButton.getText().equals("해제")) //눈으로 보이는건 사용인데 누를시에 해제로 바껴서 해제로 인식해야함
+                        {
+                            BluetoothDevice device = myBluetoothAdapter.getRemoteDevice((pref.getString("UDOOMAC", "")));
+                            setupConnector(device);
+                            ((ToggleButton)findViewById(R.id.toggleButtonUdoo)).setEnabled(false);
+                            // stopConnection();
+                        }
+                        else if(toggleButton.getText().equals("사용")) //눈으로보이는건 해제인데 누를시에 사용으로 바껴서 사용으로 인식해야함
+                        {
+                            stopConnection();
+                        }
+
 
                     }
                     break;

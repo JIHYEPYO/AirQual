@@ -73,11 +73,11 @@ public class HttpConnection extends AsyncTask<String, String, String> {
                 case 2: ///device register
                 {
 
-                    url = new URL("http://teama-iot.calit2.net/slim/recieveData.php/device_connect");
+                    url = new URL("http://teama-iot.calit2.net/slim/recieveData.php/device-connect");
 
                     //Cursor cursor=db.rawQuery("SELECT Lat,Lon FROM Gps_data WHERE regdate="+String.valueOf(System.currentTimeMillis()/1000),null);
                     //cursor.moveToNext();
-                    url = new URL("http://teama-iot.calit2.net/slim/recieveData.php/device-connect");
+                    //url = new URL("http://teama-iot.calit2.net/slim/recieveData.php/device-connect");
 
                     break;
                 }
@@ -85,6 +85,7 @@ public class HttpConnection extends AsyncTask<String, String, String> {
                 {
                     url = new URL("teama-iot.calit2.net/slim/recieveData.php/connection-manage");
                     //teama-iot.calit2.net/slim/recieveData.php/connection_manage
+
                     break;
                 }
                 case 4: //response histroy data
@@ -96,7 +97,7 @@ public class HttpConnection extends AsyncTask<String, String, String> {
                     break;
                 }
                 case 6: //input ar data
-                {
+                {   url=new URL("teama-iot.calit2.net/slim/recieveData.php/input-air-data");
                     //str[0] json data
                     break;
                 }
@@ -178,7 +179,7 @@ public class HttpConnection extends AsyncTask<String, String, String> {
                     json.put("type","app");
                     json.put("userID",str[0]); //userID
                     json.put("request","0");
-                    if (Util_STATUS.SELECT_BLUETOOTH==0)
+                    if (Util_STATUS.SELECT_BLUETOOTH==0) //UDOO
                     {
                         json.put("deviceTYPE","0");
                     }
@@ -289,7 +290,6 @@ public class HttpConnection extends AsyncTask<String, String, String> {
                     //json.put("connectionID",String.valueOf(123));
                     json.put("timeSTAMP",String.valueOf(getjson.getInt("TIME")));
                     json.put("LATITUDE", String.valueOf(Gps_Manager.latLng.latitude));
-
                     json.put("LONGITUDE",String.valueOf(Gps_Manager.latLng.longitude));
                     json.put("CO",String.valueOf(getjson.getInt("CO"))); //1241.4124
                     json.put("NO2",String.valueOf(getjson.getDouble("NO2")));
@@ -395,15 +395,15 @@ public class HttpConnection extends AsyncTask<String, String, String> {
                             editor.putString("userID",jsonObject.getString("userID"));
                             editor.commit();
                             //editor.putString("UDOOMAC", address);
-                            Toast.makeText(connectContext, "Log-In Success!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(connectContext, "Log-In Success!", Toast.LENGTH_SHORT).show();
                             Intent IntentSettingDevice = new Intent(activity, SettingDeviceActivity.class);
                             activity.startActivity(IntentSettingDevice);
                             break;
                         case "1":
-                            Toast.makeText(connectContext, "No exist in DB", Toast.LENGTH_LONG).show();
+                            Toast.makeText(connectContext, "No exist in DB", Toast.LENGTH_SHORT).show();
                             break;
                         case "2":
-                            Toast.makeText(connectContext, "Password is wrong", Toast.LENGTH_LONG).show();
+                            Toast.makeText(connectContext, "Password is wrong", Toast.LENGTH_SHORT).show();
                             break;
                         case "3":
                             Toast.makeText(connectContext, "Lock account.\nPlease check the link in Email\nPlease Go to Web site, Change your Password!", Toast.LENGTH_LONG).show();
@@ -418,13 +418,13 @@ public class HttpConnection extends AsyncTask<String, String, String> {
                     switch (response)
                     {
                         case "4":
-                            Toast.makeText(connectContext, "Sign up in with this account", Toast.LENGTH_LONG).show();
+                            Toast.makeText(connectContext, "Sign up in with this account", Toast.LENGTH_SHORT).show();
                             break;
                         case "5":
-                            Toast.makeText(connectContext, "Password must be at least 8 character long", Toast.LENGTH_LONG).show();
+                            Toast.makeText(connectContext, "Password must be at least 8 character long", Toast.LENGTH_SHORT).show();
                             break;
                         case "6":
-                            Toast.makeText(activity, "Sign Up Success!\n Please Check the link in Email.\nActivated your account", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, "Sign Up Success!\n Please Check the link in Email.\nActivated your account", Toast.LENGTH_SHORT).show();
                             Intent IntentSignIn = new Intent(activity, SignInActivity.class);
                             activity.startActivity(IntentSignIn);
                     }
@@ -500,35 +500,7 @@ public class HttpConnection extends AsyncTask<String, String, String> {
                     break;
                 }
             }
-            switch (response) {
-                case "0":
-                    Toast.makeText(connectContext, "Log-In Success!", Toast.LENGTH_LONG).show();
-                    Intent IntentSettingDevice = new Intent(activity, SettingDeviceActivity.class);
-                    activity.startActivity(IntentSettingDevice);
-                    break;
-                case "1":
-                    Toast.makeText(connectContext, "No exist in DB", Toast.LENGTH_LONG).show();
-                    break;
-                case "2":
-                    Toast.makeText(connectContext, "Password is wrong", Toast.LENGTH_LONG).show();
-                    break;
-                case "3":
-                    Toast.makeText(connectContext, "Lock account.\nPlease check the link in Email\nPlease Go to Web site, Change your Password!", Toast.LENGTH_LONG).show();
-                    break;
-                case "4":
-                    Toast.makeText(connectContext, "Sign up in with this account", Toast.LENGTH_LONG).show();
-                    break;
-                case "5":
-                    Toast.makeText(connectContext, "Password must be at least 8 character long", Toast.LENGTH_LONG).show();
-                    break;
-                case "6":
-                    Toast.makeText(activity, "Sign Up Success!\n Please Check the link in Email.\nActivated your account", Toast.LENGTH_LONG).show();
-                    Intent IntentSignIn = new Intent(activity, SignInActivity.class);
-                    activity.startActivity(IntentSignIn);
-                    break;
-                default:
-                    Toast.makeText(connectContext, "Exception!\nPlease Use Later", Toast.LENGTH_LONG).show();
-            }
+
 
         } catch (JSONException e) {
             e.printStackTrace();

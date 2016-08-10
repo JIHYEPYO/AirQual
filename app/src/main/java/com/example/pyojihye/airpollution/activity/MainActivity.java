@@ -300,11 +300,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void handleMessage(Message msg) {
             //블루투스에서 들어온 데이터
+            //NAV_MENU_SELECT=0; //0 DEFAULT 1 MAIN 2 REALTIME DATA 3 CHART 4 REALTIME MAP 5 HISTORY MAP 6 DEVICEMANAGEMENT
 
             if(Util_STATUS.BLUETOOTH_RECEIVCE==1) //JSON
             {
-                //JSONObject jsonObject=(JSONObject)msg.getData("data");
+                //string
+                msg.getData().getString("data");
                 JSONObject jsonObject=(JSONObject)msg.getData().get("data");
+
+                //JSONObject jsonObject=(JSONObject)msg.getData("data");
 
             }
             else if(Util_STATUS.BLUETOOTH_RECEIVCE==2) //CSV
@@ -342,8 +346,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         if (id == R.id.nav_main) {
-
+            Util_STATUS.NAV_MENU_SELECT=1;
         } else if (id == R.id.nav_realtime_data) {
+            Util_STATUS.NAV_MENU_SELECT=2;
             Fragment fr = new Fr_View_pager();
 
             pa = new Pager_Adapter(getLayoutInflater(), getApplicationContext(),((Fr_View_pager)fr).getV_viewpager());
@@ -352,9 +357,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.list_container, fr);
             fragmentTransaction.commit();
+            //NAV_MENU_SELECT=0; //0 DEFAULT 1 MAIN 2 REALTIME DATA 3 CHART 4 REALTIME MAP 5 HISTORY MAP 6 DEVICEMANAGEMENT
             Air_Fake_Service.RECEIVE_DATA_STATUS=true;
 
         } else if (id == R.id.nav_chart) {
+            Util_STATUS.NAV_MENU_SELECT=3;
             Fragment fr=new Fr_Historychart_pager();
             ha=new History_Adapter(getLayoutInflater(), getApplicationContext());
 
@@ -366,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         } else if (id == R.id.nav_realtime_map) {
+            Util_STATUS.NAV_MENU_SELECT=4;
             // MapFragment map=(MapFragment)getFragmentManager().findFragmentById(R.id.map);
             Fragment fr = new Fr_R_G_Map(gps_manager.get_LatLng());
 
@@ -376,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.commit();
             P_Data.Util_STATUS.REAL_MAP_STATE=true;
         } else if (id == R.id.nav_history_map) {
-
+            Util_STATUS.NAV_MENU_SELECT=5;
             Fragment fr=new Fr_H_G_Map(gps_manager.get_LatLng());
 
             fragmentManager=getFragmentManager();
@@ -390,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         } else if (id == R.id.nav_management) {
-
+            Util_STATUS.NAV_MENU_SELECT=6;
 
         }
 

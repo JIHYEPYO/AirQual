@@ -36,7 +36,7 @@ public class SignUpActivity extends AppCompatActivity {
             String lastName = editTextLastName.getText().toString();
 
             if(firstName.equals("") || lastName.equals("") || email.equals("") || password.equals("")) {
-                Toast.makeText(getApplicationContext(), "Please fill in all information", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Please fill in all information", Toast.LENGTH_SHORT).show();
                 return;
             }else{
                 if(password.equals(confirmPassword)){
@@ -44,7 +44,7 @@ public class SignUpActivity extends AppCompatActivity {
                     HttpConnection httpConnectionSignUp = new HttpConnection(SignUpActivity.this,getApplicationContext());
                     httpConnectionSignUp.execute(email,password,confirmPassword,firstName,lastName);
                 }else{
-                    Toast.makeText(getApplicationContext(), "This is not the same password and its confirmation.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "This is not the same password and its confirmation.", Toast.LENGTH_SHORT).show();
                 }
             }
         }

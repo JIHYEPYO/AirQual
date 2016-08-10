@@ -22,7 +22,7 @@ public class Util_STATUS {
                                               //0 not ready 1 json 2 csv
     public static int REQ_CONNECTION_STATE=0; //0 REQUEST CONNECTION 1 REQUEST DISCONNETION
     //public static boolean
-
+    public static int NAV_MENU_SELECT=0; //0 DEFAULT 1 MAIN 2 REALTIME DATA 3 CHART 4 REALTIME MAP 5 HISTORY MAP 6 DEVICEMANAGEMENT
     public Util_STATUS() {
 
     }

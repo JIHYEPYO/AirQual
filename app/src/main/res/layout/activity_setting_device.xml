@@ -24,8 +24,8 @@
             android:paddingBottom="25dp">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="100dp"
                 android:background="@drawable/udoo0"
                 android:id="@+id/imageViewUdoo"
                 android:clickable="true"
@@ -59,7 +59,9 @@
             <ToggleButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ON"
+
+                android:textOff="해제"
+                android:textOn="연결"
                 android:id="@+id/toggleButtonUdoo"
                 android:layout_gravity="center|right"
                 android:onClick="onToggleButtonUdooClick"
@@ -77,8 +79,8 @@
             android:paddingRight="15dp">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="100dp"
                 android:background="@drawable/heartrate0"
                 android:id="@+id/imageViewHeart"
                 android:clickable="true"
@@ -113,7 +115,9 @@
             <ToggleButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ON"
+
+                android:textOff="해제"
+                android:textOn="연결"
                 android:id="@+id/toggleButtonHeart"
                 android:layout_gravity="center|right"
                 android:onClick="onToggleButtonUdooClick"
