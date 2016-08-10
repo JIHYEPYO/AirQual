@@ -8,8 +8,8 @@
     <string name="title_paired_devices">Paired devices</string>
     <string name="title_other_devices">Other devices</string>
     <string name="action_settings">Settings</string>
-    <string name="sign_in">http://teama-iot.calit2.net/slim/recieveData.php/sign-in</string>
-    <string name="sign_up">http://teama-iot.calit2.net/slim/recieveData.php/sign-up</string>
+    <string name="url_sign_in">http://teama-iot.calit2.net/slim/recieveData.php/sign-in</string>
+    <string name="url_sign_up">http://teama-iot.calit2.net/slim/recieveData.php/sign-up</string>
 
     <!-- prefence keys, no translation needed -->
 

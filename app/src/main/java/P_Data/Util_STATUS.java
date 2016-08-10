@@ -20,7 +20,7 @@ public class Util_STATUS {
                                              //4 RESPONSE HISTORY DATA 5 GET REAL TIME USER DATA
     public static int BLUETOOTH_RECEIVCE=0; //ready to receive bluetooth data
                                               //0 not ready 1 json 2 csv
-
+    public static int REQ_CONNECTION_STATE=0; //0 REQUEST CONNECTION 1 REQUEST DISCONNETION
     //public static boolean
 
     public Util_STATUS() {

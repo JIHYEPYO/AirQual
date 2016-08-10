@@ -24,7 +24,7 @@ public class Gps_Manager {
     public LocationManager locationManager;
     Location location;
     Context mContext;
-    LatLng latLng=null;
+    public static LatLng latLng=null;
     DBHelper helper;
     SQLiteDatabase db;
 

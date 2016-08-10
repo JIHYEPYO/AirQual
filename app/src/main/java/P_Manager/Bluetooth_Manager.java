@@ -15,11 +15,7 @@ public class Bluetooth_Manager {
 
     }
     public static Bluetooth_Manager getInstance() {
-        // 아직 인스턴스가 만들어지지 않았다면 private으로 선언된 생성자를 이용해서 객체를 만들고
-        // uniqueInstance에 그 객체를 대입합니다. 이렇게 하면 인스턴스가 필요한 상황이 닥치기 전에는
-        // 아예 인스턴스를 생성하지 않게 되죠. 이런 방법을 "lazy instantiation"이라고 한다.
-        //if(uniqueInstance == null)
-           //uniqueInstance = new Bluetooth_Manager();
+
 
         return uniqueInstance;
     }

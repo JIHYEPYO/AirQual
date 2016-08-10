@@ -59,7 +59,7 @@
             <ToggleButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="OFF"
+                android:text="ON"
                 android:id="@+id/toggleButtonUdoo"
                 android:layout_gravity="center|right"
                 android:onClick="onToggleButtonUdooClick"
@@ -113,7 +113,7 @@
             <ToggleButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="OFF"
+                android:text="ON"
                 android:id="@+id/toggleButtonHeart"
                 android:layout_gravity="center|right"
                 android:onClick="onToggleButtonUdooClick"

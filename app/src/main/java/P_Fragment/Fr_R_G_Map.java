@@ -84,7 +84,6 @@ public class Fr_R_G_Map extends Fragment implements OnMapReadyCallback,GoogleMap
 
                 case R.id.CO_button :
                     P_Data.Util_STATUS.GMap_Realtime_set="CO";
-
                     btn=((Button)view.findViewById(R.id.CO_button));
                     btn.setBackgroundColor(Color.DKGRAY);
                     break ;
@@ -95,13 +94,11 @@ public class Fr_R_G_Map extends Fragment implements OnMapReadyCallback,GoogleMap
                     break ;
                 case R.id.NO_button :
                     P_Data.Util_STATUS.GMap_Realtime_set="NO2";
-
                     btn=((Button)view.findViewById(R.id.NO_button));
                     btn.setBackgroundColor(Color.DKGRAY);
                     break ;
                 case R.id.O3_button :
                     P_Data.Util_STATUS.GMap_Realtime_set="O3";
-
                     btn=((Button)view.findViewById(R.id.O3_button));
                     btn.setBackgroundColor(Color.DKGRAY);
                     break ;

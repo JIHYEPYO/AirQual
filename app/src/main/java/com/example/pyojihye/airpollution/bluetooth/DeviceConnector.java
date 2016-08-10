@@ -173,6 +173,7 @@ public class DeviceConnector {
 
     private void connectionLost() {
         // Send a failure message back to the Activity
+        //이곳에서 disconnect 요청
         Message msg = mHandler.obtainMessage(SettingDeviceActivity.MESSAGE_TOAST);
         Bundle bundle = new Bundle();
         msg.setData(bundle);
@@ -273,6 +274,7 @@ public class DeviceConnector {
         int count=0;
         public void run() {
             if (D) Log.i(TAG, "ConnectedThread run");
+
             //이타이밍에 httpconnection 요청
             HttpConnection httpConnectionreqconn =new HttpConnection(activity,activity.getApplicationContext());
             //1.1.1. "type":"app","deviceID":"000","request":"0"
@@ -280,7 +282,10 @@ public class DeviceConnector {
             Util_STATUS.HTTP_CONNECT_KIND=3;
             httpConnectionreqconn.execute(activity.getSharedPreferences("MAC",0).getString("deviceID",""));
             //pref=getSharedPreferences("MAC",0);
-            byte[] buffer = new byte[1024];
+
+            byte[] buffer = new byte[4096];
+            byte [] csv_buffer =null;
+
             int bytes;
             StringBuilder readMessage = new StringBuilder();
             JSONObject jsonObject=new JSONObject();
@@ -306,6 +311,58 @@ public class DeviceConnector {
                         if(json.getString("res")=="CSV")
                         {
                             Util_STATUS.BLUETOOTH_RECEIVCE=2;
+
+                            if(json.getString("res").equals("CSV"))
+                            {
+                                Util_STATUS.BLUETOOTH_RECEIVCE = 2;
+                                json=new JSONObject();
+                                json.put("req","CSV");
+                                writeData(json.toString().getBytes());
+
+                                /*
+
+                                csv_buffer=new byte[mmInStream.available()];
+
+                                while(mmInStream.available()>0)
+                                {
+                                    mmInStream.read(csv_buffer);
+                                }*/
+                                Util_STATUS.BLUETOOTH_RECEIVCE=1;
+
+                                //String row="";
+                                //csv 일일히 읽는거
+                                //List<String[]> results = new ArrayList<String[]>();
+
+                                /*new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        BufferedReader reader = new BufferedReader(new InputStreamReader(mmInStream));
+                                        List<String> results=new ArrayList<String>();
+                                        String line;
+                                        try {
+                                            while((line = reader.readLine()) != null){
+                                                //String[] row = line.split("\t");
+                                                //row+=line;
+                                                results.add(line);
+                                                Log.d("data",line);
+                                            }
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }).start();*/
+
+                                /* byte buffer에 넣는 부분*/
+
+
+                                //Object로 바꾸는거
+
+                                //csv_buffer=new byte[mmInStream.available()];
+                                //BufferedReader reader1=new BufferedReader(csv_buffer);
+
+                            }
+
+
                         }
                         else if(Util_STATUS.BLUETOOTH_RECEIVCE==1) { //JSON
                             //json으로 변환되어있음

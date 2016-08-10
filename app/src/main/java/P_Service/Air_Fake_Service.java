@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import P_Data.Air_Data;
+import P_Manager.Bluetooth_Manager;
 
 /**
  *
@@ -69,7 +70,7 @@ public class Air_Fake_Service extends Service {
         Bundle bundle=new Bundle();
 
         bundle.putSerializable("data",Get_Air_Data2());
-
+        Bluetooth_Manager.getInstance().Set_Data(bundle);
         return bundle;
 
     }

@@ -27,12 +27,10 @@ import com.example.pyojihye.airpollution.R;
 import com.example.pyojihye.airpollution.bluetooth.BluetoothChatService;
 import com.example.pyojihye.airpollution.bluetooth.DeviceConnector;
 import com.example.pyojihye.airpollution.bluetooth.DeviceData;
-import com.example.pyojihye.airpollution.bluetooth.Utils;
 
 import java.util.Set;
 
 import P_Data.Util_STATUS;
-import P_Fragment.Fr_DeviceManagement;
 
 /**
  * Created by PYOJIHYE on 2016-08-03.
@@ -207,7 +205,9 @@ public class SettingDeviceActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Connected to " + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
                     break;
                 case MESSAGE_TOAST:
-                    Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Socket connection failed",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),Toast.LENGTH_SHORT).show();
+
                     break;
             }
         }
@@ -220,21 +220,13 @@ public class SettingDeviceActivity extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK)
                 {
                     String address = data.getStringExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-                    /*
-                     {
-                    "type":"app",
-                    "userID":"11",
-                    "request":0,
-                    "deviceTYPE":"0",
-                    "deviceMAC":"x'FFFFFFFFFF12'"
-                    }
-                     */
-                    Util_STATUS.HTTP_CONNECT_KIND=2; //2 = REGISTER DEVICE
-                    HttpConnection httpConnectionRegDevice = new HttpConnection(this,getApplicationContext());
 
+                    Util_STATUS.HTTP_CONNECT_KIND=2; //2 = REGISTER DEVICE
+
+                    HttpConnection httpConnectionRegDevice = new HttpConnection(this,getApplicationContext());
                     httpConnectionRegDevice.execute(  this.getSharedPreferences("MAC",0).getString("userID",""),address);// user id , address
-                    //1.1.1. {"type":"app","deviceID":"000","request":"0"}
-                    //httpConnectionSignUp.execute(email,password,confirmPassword,firstName,lastName);
+                    //HttpConnection httpConnectionreqconn =new HttpConnection(this,this.getApplicationContext());
+                    //httpConnectionreqconn.execute("7");
                     switch (Util_STATUS.SELECT_BLUETOOTH) //0 UDOO 1 HEART
                     {
                         case 0:
@@ -285,18 +277,39 @@ public class SettingDeviceActivity extends AppCompatActivity {
             DeviceData data = new DeviceData(connectedDevice, emptyName);
             connector = new DeviceConnector(data, mHandler,this);
             connector.connect();
+           //connection 요청
+            Util_STATUS.HTTP_CONNECT_KIND=3;  //http connection
+            Util_STATUS.REQ_CONNECTION_STATE=0; //request connection
+            HttpConnection httpConnectionreqconn =new HttpConnection(this,this.getApplicationContext());
+            httpConnectionreqconn.execute(this.getSharedPreferences("MAC",0).getString("deviceID",""));
         } catch (IllegalArgumentException e) {
-            Utils.log("setupConnector failed: " + e.getMessage());
+            Toast.makeText(this,"Bluetooth connection failed",Toast.LENGTH_LONG).show();
+
         }
     }
 
     private void stopConnection() {
+        //stopconnection 요청
         if (connector != null) {
             connector.stop();
             connector = null;
             textViewUDOOName.setText("UDOO Board");
             DeviceListActivity.macaddress="NOT CONNECTED";
             imageViewUdoo.setImageResource(R.drawable.udoo0);
+
+            Util_STATUS.HTTP_CONNECT_KIND=3;  //http connection
+            Util_STATUS.REQ_CONNECTION_STATE=1; //request connection
+            HttpConnection httpConnectionreqconn =new HttpConnection(this,this.getApplicationContext());
+            if(Util_STATUS.SELECT_BLUETOOTH==0)
+            {
+                httpConnectionreqconn.execute(this.getSharedPreferences("MAC",0).getString("UDOOdeviceID",""));
+
+            }else if(Util_STATUS.SELECT_BLUETOOTH==1)
+            {
+                httpConnectionreqconn.execute(this.getSharedPreferences("MAC",0).getString("HEARTdeviceID",""));
+
+            }
+
         }
     }
 
@@ -311,13 +324,22 @@ public class SettingDeviceActivity extends AppCompatActivity {
                 case R.id.toggleButtonUdoo:
                 {
                     if (isAdapterReady() && (connector == null)) {
+                        //udoo 연결
+                        //SELECT_BLUETOOTH=0; //0 UDOO 1 HEART
+                        Util_STATUS.SELECT_BLUETOOTH=0; //UDOO
+                        ToggleButton toggleButton=(ToggleButton)findViewById(R.id.toggleButtonUdoo);
+                        //이름이 해제일떄 연결
+                        //이름이 연결일떄 해제
+                       // toggleButton.get
                         BluetoothDevice device = myBluetoothAdapter.getRemoteDevice((pref.getString("UDOOMAC", "")));
                         setupConnector(device);
+
                     }
                     break;
                 }
                 case R.id.toggleButtonHeart:
                 {
+                    Util_STATUS.SELECT_BLUETOOTH=1;
                     if (isAdapterReady() && (connector == null)) {
                         BluetoothDevice device = myBluetoothAdapter.getRemoteDevice((pref.getString("HEARTMAC", "")));
                         setupConnector(device);

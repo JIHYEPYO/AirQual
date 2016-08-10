@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import P_Data.Util_STATUS;
+import P_Manager.Gps_Manager;
 
 /**
  * Created by PYOJIHYE on 2016-08-04.
@@ -61,21 +62,29 @@ public class HttpConnection extends AsyncTask<String, String, String> {
             {
                 case 0: //sign in
                 {
-                    url = new URL("http://teama-iot.calit2.net/slim/recieveData.php//sign-in");
+                    url = new URL("http://teama-iot.calit2.net/slim/recieveData.php/sign-in");
                     break;
                 }
                 case 1: //sign up
                 {
-                    url = new URL("http://teama-iot.calit2.net/slim/recieveData.php//sign-up");
+                    url = new URL("http://teama-iot.calit2.net/slim/recieveData.php/sign-up");
                     break;
                 }
                 case 2: ///device register
                 {
+
                     url = new URL("http://teama-iot.calit2.net/slim/recieveData.php/device_connect");
+
+                    //Cursor cursor=db.rawQuery("SELECT Lat,Lon FROM Gps_data WHERE regdate="+String.valueOf(System.currentTimeMillis()/1000),null);
+                    //cursor.moveToNext();
+                    url = new URL("http://teama-iot.calit2.net/slim/recieveData.php/device-connect");
+
                     break;
                 }
                 case 3: //connection request
                 {
+                    url = new URL("teama-iot.calit2.net/slim/recieveData.php/connection-manage");
+                    //teama-iot.calit2.net/slim/recieveData.php/connection_manage
                     break;
                 }
                 case 4: //response histroy data
@@ -191,9 +200,126 @@ public class HttpConnection extends AsyncTask<String, String, String> {
                 }
                 case 3: //connect request device id 들어옴
                 {
+
                     json.put("type","app");
                     json.put("deviceID",str[0]);
                     json.put("request","0");
+
+                    switch (Util_STATUS.REQ_CONNECTION_STATE)
+                    {
+                        case 0: //reqeust connection
+                        {
+                            //Util_STATUS.SELECT_BLUETOOTH=0;
+                            switch (Util_STATUS.SELECT_BLUETOOTH)
+                            {
+                                case 0:
+                                {
+                                    json.put("type","app");
+                                    json.put("userID",activity.getSharedPreferences("MAC",0).getString("userID",""));
+                                    //activity.getSharedPreferences("MAC",0).getString("deviceID","")
+                                    json.put("UDOOdeviceID",str[0]);
+                                    json.put("request","0");
+                                }
+                                    break;
+                                case 1:
+                                {
+
+                                    json.put("type","app");
+                                    json.put("userID",activity.getSharedPreferences("MAC",0).getString("userID",""));
+                                    //activity.getSharedPreferences("MAC",0).getString("deviceID","")
+                                    json.put("HEARTdeviceID",str[0]);
+                                    json.put("request","0");
+                                }
+                                    break;
+                            }
+
+                            break;
+                        }
+
+                        case 1:
+                        {
+                            switch (Util_STATUS.SELECT_BLUETOOTH)
+                            {
+                                case 0:
+                                {
+                                    json.put("type","app");
+                                    json.put("userID",activity.getSharedPreferences("MAC",0).getString("userID",""));
+                                    //activity.getSharedPreferences("MAC",0).getString("deviceID","")
+                                    json.put("UDOOdeviceID",str[0]);
+                                    json.put("request","1");
+                                }
+                                break;
+                                case 1:
+                                {
+
+                                    json.put("type","app");
+                                    json.put("userID",activity.getSharedPreferences("MAC",0).getString("userID",""));
+                                    //activity.getSharedPreferences("MAC",0).getString("deviceID","")
+                                    json.put("HEARTdeviceID",str[0]);
+                                    json.put("request","1");
+                                }
+                                break;
+                            }
+                            break;
+                        }
+                    }
+                    //REQ_CONNECTION_STATE=0; //0 REQUEST CONNECTION 1 REQUEST DISCONNETION
+
+
+                    // editor.putString("userID",jsonObject.getString("userID"));
+                    break;
+                }
+                case 4: //response histroy data
+                {
+
+                    break;
+                }
+                case 5: //get real time user data
+                {
+                    //json.getInt("CO");
+                    break;
+                }
+                case 6: //input ar data
+                {
+                    JSONObject getjson = new JSONObject(str[0]); //String to json parsing
+                    //들어오는값들 INT
+                    //json.getInt("CO");
+                    json.put("sender","app");
+                    json.put("connectionID",activity.getSharedPreferences("MAC",0).getString("connectionID",""));
+                    //json.put("connectionID",String.valueOf(123));
+                    json.put("timeSTAMP",String.valueOf(getjson.getInt("TIME")));
+                    json.put("LATITUDE", String.valueOf(Gps_Manager.latLng.latitude));
+
+                    json.put("LONGITUDE",String.valueOf(Gps_Manager.latLng.longitude));
+                    json.put("CO",String.valueOf(getjson.getInt("CO"))); //1241.4124
+                    json.put("NO2",String.valueOf(getjson.getDouble("NO2")));
+                    json.put("O3",String.valueOf(getjson.getDouble("O3")));
+                    json.put("PM",String.valueOf(getjson.getInt("PM")));
+                    json.put("SO2",String.valueOf(getjson.getDouble("SO2")));
+                    json.put("TEMP",String.valueOf(getjson.getInt("TEMP")));
+
+
+                    /*
+                    Cursor cursor=db.rawQuery("SELECT Lat,Lon FROM Gps_data WHERE regdate="+String.valueOf(json.getInt("TIME")),null);
+                    cursor.moveToNext();
+                    sendjson.put("LATITUDE",cursor.getDouble(0) );
+                    sendjson.put("LONGITUDE",cursor.getDouble(1));
+                    // cursor=db.rawQuery("SELECT MAX(CO) FROM Air_data",null);
+                    // this.getSharedPreferences("MAC",0).getString("userID",""),address
+                    //str[0]
+                    //{"CO": 82, "NO2": 21,
+                    //"O3": 87, "PM": 29,
+                     //   "SO2": 36, "TEMP": 59, "TIME": 52}
+                    //이런 형식
+                    /*
+                    send type
+                    {"type":"app","connectionID":"111","timeSTAMP":"160807051333",
+                    "LATITUDE":"38.1234567","LONGITUDE":"118.1234567",
+                    "CO":82,"NO2":21,"O3":87,"PM":29,"SO2":36,"TEMP":59}
+
+                     */
+                    //str[0] json data
+
                     break;
                 }
             }
@@ -312,15 +438,31 @@ public class HttpConnection extends AsyncTask<String, String, String> {
                     {
                         //pref 안에 디바이스 이름 디바이스 맥 유저 아이디 디바이스 아이디 저장
                         //{"type":"web","response":0,"deviceID":{"maxID":"5"}}Invalid HTTP status code211
-                        pref=activity.getSharedPreferences("MAC",0);
-                        SharedPreferences.Editor editor = pref.edit();
-                        editor.putString("deviceID",jsonObject.getString("deviceID"));
-                        editor.commit();
-                        Toast.makeText(activity,"Device register success!",Toast.LENGTH_SHORT).show();
+                        //SELECT_BLUETOOTH=0; //0 UDOO 1 HEART
+                        switch (Util_STATUS.SELECT_BLUETOOTH)
+                        {
+                            case 0: //UDOO
+                            {
+                                pref=activity.getSharedPreferences("MAC",0);
+                                SharedPreferences.Editor editor = pref.edit();
+                                editor.putString("UDOOdeviceID",jsonObject.getString("deviceID"));
+                                editor.commit();
+                                break;
+                            }
+                            case 1:
+                            {
+                                pref=activity.getSharedPreferences("MAC",0);
+                                SharedPreferences.Editor editor=pref.edit();
+                                editor.putString("HEARTdeviceID",jsonObject.getString("deviceID"));
+                                break;
+                            }
+                        }
+
+                        Toast.makeText(connectContext,"Device register success!",Toast.LENGTH_SHORT).show();
                     }
                     else if(response=="1")
                     {
-                        Toast.makeText(activity,"Device register error!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(connectContext,"Device register error!",Toast.LENGTH_SHORT).show();
                     }
                         //여기서 디바이스 아이디 저장
                     //1.1.1. {"type":"web","response":"0","deviceID":1234}

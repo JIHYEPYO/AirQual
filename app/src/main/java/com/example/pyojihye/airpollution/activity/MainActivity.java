@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 //hgmap_manager.addHeatMap();
             }
-
+            //Bluetooth_Manager.getInstance().Set_Data(msg.getData());
             Air_Data ar=(Air_Data)msg.getData().getSerializable("data");
             if(P_Data.Util_STATUS.REAL_MAP_STATE) {
                 if (ar != null) {
@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             ");";
 
             db.execSQL(sql);
-            //db.execSQL("INSERT INTO Air_data(regdate,CO,SO2,NO2,O3,PM) values(1234,'12','13','14','15','16');");
+
 
 
 
@@ -339,6 +339,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         //클릭시마다 상태확인
+
+
         if (id == R.id.nav_main) {
 
         } else if (id == R.id.nav_realtime_data) {
@@ -349,18 +351,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.list_container, fr);
-
             fragmentTransaction.commit();
             Air_Fake_Service.RECEIVE_DATA_STATUS=true;
 
         } else if (id == R.id.nav_chart) {
+            Fragment fr=new Fr_Historychart_pager();
+            ha=new History_Adapter(getLayoutInflater(), getApplicationContext());
+
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
-            Fragment fr=new Fr_Historychart_pager();
 
             fragmentTransaction.replace(R.id.list_container, fr);
             fragmentTransaction.commit();
-            ha=new History_Adapter(getLayoutInflater(), getApplicationContext());
+
 
         } else if (id == R.id.nav_realtime_map) {
             // MapFragment map=(MapFragment)getFragmentManager().findFragmentById(R.id.map);
@@ -368,28 +371,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
+
             fragmentTransaction.replace(R.id.list_container, fr);
-            //fragmentTransaction.add(R.id.list_container,fr);
             fragmentTransaction.commit();
-            //Air_Fake_Service.RECEIVE_DATA_STATUS=true;
             P_Data.Util_STATUS.REAL_MAP_STATE=true;
         } else if (id == R.id.nav_history_map) {
-            //getMapFragment();
-            //MapFragment map=(MapFragment)getFragmentManager().findFragmentById(R.id.map);
+
             Fragment fr=new Fr_H_G_Map(gps_manager.get_LatLng());
+
             fragmentManager=getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
+
             fragmentTransaction.replace(R.id.list_container, fr);
             fragmentTransaction.commit();
+
             Air_Fake_Service.RECEIVE_DATA_STATUS=true;
             P_Data.Util_STATUS.REAL_MAP_STATE=true;
 
-            //fragmentManager.findFragmentById(R.id.map);
+
         } else if (id == R.id.nav_management) {
 
 
         }
-        //GMap_Manager.user_hash.clear();
+
         GMap_Manager.user_array.clear();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
