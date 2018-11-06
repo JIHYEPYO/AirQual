@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/setting_info"
+    android:gravity="bottom">
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Next"
+        android:id="@+id/buttonNext"
+        android:layout_gravity="center"
+        android:allowUndo="false"
+        android:clickable="false"
+        android:enabled="true"
+        android:singleLine="false"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@color/colorAccent"
+        android:layout_marginBottom="20dp"/>
+
+</LinearLayout>

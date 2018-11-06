@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#aad293</color>
+    <color name="colorPrimaryDark">#588f33</color>
+    <color name="colorAccent">#ffffff</color>
+    <color name="colorGray">#ededed</color>
+    <color name="colorGrayDark">#bfbfbf</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorIntroBackGround">#7fb648</color>
+    <color name="colorTextHint">#808080</color>
+    <color name="colorSignUpBackGround">#96c778</color>
+    <color name="colorButtonRegisterBackGround">#4d7832</color>
+    <color name="colorButtonRegisterTextColor">#f3f3f3</color>
+    <color name="colorButtonLogInBackGround">#4f9e30</color>
+    <color name="colorSignInBackGround">#aac679</color>
+
+    <color name="colorCO">#9ec3e6</color>
+    <color name="colorSO2">#e5a0d1</color>
+    <color name="colorNO2">#9de8d0</color>
+    <color name="colorO3">#dcbd91</color>
+    <color name="colorPM">#7d7d7d</color>
+    <color name="colorTEMP">#ee9997</color>
+
+    <color name="colorAQIGreen">#93d051</color>
+    <color name="colorAQIYellow">#ffcc02</color>
+    <color name="colorAQIOrange">#ff9a02</color>
+    <color name="colorAQIRed">#ff3402</color>
+    <color name="colorAQIPuple">#7131a1</color>
+    <color name="colorAQIDarkred">#c00202</color>
+    <color name="colorAQINULL">#414141</color>
+
+    <color name="colorAQIGreenCircle">#7093d051</color>
+    <color name="colorAQIYellowCircle">#70ffcc02</color>
+    <color name="colorAQIOrangeCircle">#70ff9a02</color>
+    <color name="colorAQIRedCircle">#70ff3402</color>
+    <color name="colorAQIPupleCircle">#707131a1</color>
+    <color name="colorAQIDarkredCircle">#70c00202</color>
+    <color name="colorAQINULLCircle">#70414141</color>
+
+</resources>
